@@ -1,0 +1,78 @@
+body {
+    min-height: 100vh;
+    background: linear-gradient(to bottom, #FEDE5F, #F8F4FF);
+    font-family: 'Montserrat', 'Lora', 'Open Sans';
+}
+
+/* Basic styling */
+h1 {
+    font-family: 'Montserrat';
+    color: #FFD7F3;
+    font-size: 2em;
+    margin: auto;
+}
+
+/* Header */
+.navbar {
+    background-color: #9576DD;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar {
+    width: 100%;
+}
+
+.nav-text {
+    color: white;
+    text-align: center;
+    font-size: 0.65rem;
+}
+
+.hamb-icon {
+    color: #FFD7F3;
+    font-size: 2em;
+}
+
+button[data-bs-toggle="offcanvas"] {
+    border: none;
+}
+
+/* Cards */
+.auction-card {
+    background-color: #FFD7F3;
+    border-radius: 15px;
+    padding: 1rem;
+    text-align: center;
+}
+    
+.auction-card img {
+    border-radius: 10px;
+    max-width: 100%;
+    height: auto;
+}
+
+/* Buttons */
+.btn-primary-custom {
+    background-color: #FFD700;
+    border: none;
+    color: black;
+    font-weight: bold;
+    border-radius: 20px;
+    padding: 0.4rem 1rem;
+}
+
+.arrow-icon {
+    font-size: 1.5rem;
+    color: #9576DD;
+}
+
+/* Forms */
+.form-box {
+    background-color: #FFD7F3;
+    border-radius: 15px;
+    padding: 2rem;
+    max-width: 350px;
+    margin: 2rem auto;
+}
