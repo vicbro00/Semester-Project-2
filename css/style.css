@@ -12,6 +12,10 @@ h1 {
     margin: auto;
 }
 
+h5 {
+    color: white;
+}
+
 /* Header */
 .navbar {
     background-color: #9576DD;
@@ -37,6 +41,10 @@ h1 {
 
 button[data-bs-toggle="offcanvas"] {
     border: none;
+}
+
+.offcanvas {
+    background-color: #9576DD;
 }
 
 /* Cards */
