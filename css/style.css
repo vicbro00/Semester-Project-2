@@ -48,16 +48,9 @@ button[data-bs-toggle="offcanvas"] {
 }
 
 /* Cards */
-.auction-card {
-    background-color: #FFD7F3;
-    border-radius: 15px;
-    padding: 1rem;
-    text-align: center;
-}
-    
-.auction-card img {
+.card-image {
     border-radius: 10px;
-    max-width: 100%;
+    max-width: 50%;
     height: auto;
 }
 
