@@ -69,6 +69,29 @@ button[data-bs-toggle="offcanvas"] {
     color: #9576DD;
 }
 
+/* Filter button */
+#filterDropdown {
+    min-width: 160px;
+    padding: 0.5rem 0;
+    background-color: #fff;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 0.25rem;
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.175);
+}
+
+#filterDropdown .dropdown-item {
+    padding: 0.25rem 1.5rem;
+    cursor: pointer;
+}
+
+#filterDropdown .dropdown-item:hover {
+    background-color: #f8f9fa;
+}
+
+#filterDropdown li:hover {
+    cursor: pointer;
+}
+
 /* Forms */
 .form-box {
     background-color: #FFD7F3;
