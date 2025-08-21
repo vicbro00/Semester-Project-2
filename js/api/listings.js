@@ -16,6 +16,8 @@ export async function fetchListings() {
 // Function to display listings on the page
 export async function displayListings(listings) {
     const container = document.getElementById("cardsContainer");
+    if (!container) return;
+
     container.innerHTML = "";
 
     if (!Array.isArray(listings) || listings.length === 0) {
@@ -43,8 +45,6 @@ export async function displayListings(listings) {
 
         const highestBid = listing._count?.bids || 0;
 
-        const endDate = listing.endsAt ? new Date(listing.endsAt) : null;
-
         card.innerHTML = `
             <h2 class="card-title">${listing.title}</h2>
             <p class="card-text">${description}</p>
@@ -52,7 +52,7 @@ export async function displayListings(listings) {
             <p class="card-text">Bids: ${bidCount}</p>
             <p class="card-text">Highest bid: $${highestBid}</p>
             <p class="card-text">Ends at: ${new Date(listing.endsAt).toLocaleDateString()}</p>
-            <button class="btn-primary-custom" onclick="location.href='/listings/bidding.html'">More info</button>
+            <button class="btn-primary-custom" onclick="location.href='/listings/single-listing.html?id=${listing.id}'">More info</button>
         `;
         col.appendChild(card);
         container.appendChild(col);
@@ -71,9 +71,63 @@ export async function displayListings(listings) {
     }
 }
 
+// Get a single id listing
+export async function getListing() {
+    const params = new URLSearchParams(window.location.search);
+    const listingId = params.get("id");
+
+    if (!listingId) {
+        console.error("No listing ID found in URL");
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/${listingId}`);
+        if (!response.ok) throw new Error("Failed to fetch listing");
+        const { data: listing } = await response.json();
+        console.log("Fetched listing:", listing);
+
+        const container = document.getElementById("singleListingContainer");
+        if (!container) return;
+
+        container.innerHTML = "";
+
+        const col = document.createElement("div");
+        col.classList.add("col-12", "col-md-6", "col-lg-4", "mb-4");
+
+        const card = document.createElement("div");
+        card.classList.add("card", "h-100");
+        card.dataset.created = listing.created;
+
+        const imagePlaceholder = "../images/imagePlaceholder.png";
+        const imageUrl = listing.media?.[0]?.url || imagePlaceholder;
+        const imageAlt = listing.media?.[0]?.alt || "Listing image";
+
+        const description = listing.description || "No description available.";
+        const bidCount = listing._count?.bids || 0;
+        const highestBid = listing._count?.bids || 0;
+
+        card.innerHTML = `
+            <h2 class="card-title">${listing.title}</h2>
+            <p class="card-text">${description}</p>
+            <img class="card-image" src="${imageUrl}" alt="${imageAlt}" onerror="this.onerror=null;this.src='${imagePlaceholder}'" />
+            <p class="card-text">Bids: ${bidCount}</p>
+            <p class="card-text">Highest bid: $${highestBid}</p>
+            <p class="card-text">Ends at: ${new Date(listing.endsAt).toLocaleDateString()}</p>
+        `;
+
+        col.appendChild(card);
+        container.appendChild(col);
+
+    } catch (error) {
+        console.error("Error fetching listing:", error);
+    }
+}
+
 // Filters the listings from newest or oldest
 export async function sortListings(order) {
     const container = document.getElementById("cardsContainer");
+    if (!container) return;
 
     const listings = Array.from(container.children).map(col => {
         const createdDate = new Date(col.querySelector(".card")?.dataset.created || 0);
