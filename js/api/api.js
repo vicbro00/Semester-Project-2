@@ -1,4 +1,4 @@
-export const API_KEY = "9407e53e-8858-42df-97d0-b19e7d052e97";
+export const API_KEY = "244fa6c4-339f-48fa-8050-beb609f94e12";
 export const API_BASE_URL = "https://v2.api.noroff.dev/auction/listings";
 
 export const JWT_TOKEN = localStorage.getItem("JWT_TOKEN");

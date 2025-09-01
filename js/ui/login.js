@@ -1,4 +1,5 @@
 import { API_KEY } from "../api/api.js";
+import { updateMobileMenu } from "./nav.js";
 
 const loginURL = "https://v2.api.noroff.dev/auth/login";
 
@@ -43,10 +44,17 @@ export function loginUser() {
             }
 
             const data = await response.json();
-            console.log("User logged in!", data);
 
-            localStorage.setItem("JWT_TOKEN", data.accessToken);
+            const token = data.data?.accessToken;
 
+            if (!token) {
+                throw new Error("No token found in response");
+            }
+
+            localStorage.setItem("token", token);
+            localStorage.setItem("username", data.data?.name || data.name);
+
+            updateMobileMenu();
             alert("Login successful!");
             window.location.href = "/index.html";
         } catch (error) {

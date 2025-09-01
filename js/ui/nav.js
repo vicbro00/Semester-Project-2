@@ -1,17 +1,20 @@
 export const mobileMenu = document.querySelector('#mobileMenu .offcanvas-body');
 
-export const isLoggedIn = localStorage.getItem('token') !== null;
+export function isLoggedIn() {
+    return localStorage.getItem('token') !== null;
+}
 
-export function updateMobileMenu(isLoggedIn) {
+export function updateMobileMenu() {
     if (!mobileMenu) return;
 
-    if (isLoggedIn) {
+    if (isLoggedIn()) {
         mobileMenu.innerHTML = `
             <a href="home.html" class="d-block mb-2 text-white text-decoration-none">Home</a>
             <a href="auctions.html" class="d-block mb-2 text-white text-decoration-none">Auctions</a>
-            <a href="profile.html" class="d-block mb-2 text-white text-decoration-none">Profile</a>
+            <a href="/profile/profile.html" class="d-block mb-2 text-white text-decoration-none">Profile</a>
             <a href="#" id="logout" class="d-block mb-2 text-white text-decoration-none">Logout</a>
         `;
+        setupLogout();
     } else {
         mobileMenu.innerHTML = `
             <a href="home.html" class="d-block mb-2 text-white text-decoration-none">Home</a>
