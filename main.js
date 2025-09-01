@@ -5,6 +5,7 @@ import { filterDropdown } from "./js/ui/index.js";
 import { registerUser } from "./js/ui/register.js";
 import { loginUser } from "./js/ui/login.js";
 import { fetchProfile } from "./js/ui/profile.js";
+import { updateProfile } from "./js/ui/update-profile.js";
 
 updateMobileMenu();
 
@@ -28,6 +29,10 @@ if (path.includes("register.html")) {
 if (path.includes("login.html")) {
     loginUser();
 }
-if (path.includes("profile.html")) {
+if (path.includes("update-profile.html")) {
+    updateProfile();
+}
+
+if (path.endsWith("/profile.html")) {
     fetchProfile();
 }
