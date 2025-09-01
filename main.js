@@ -3,10 +3,13 @@ import { isLoggedIn } from "./js/api/auth.js";
 import { fetchListings, getListing, sortListings } from "./js/api/listings.js";
 import { searchListings } from "./js/ui/index.js";
 import { filterDropdown } from "./js/ui/index.js";
+import { registerUser } from "./js/ui/register.js";
 
 updateMobileMenu(isLoggedIn());
 
 setupLogout();
+
+registerUser();
 
 fetchListings();
 
