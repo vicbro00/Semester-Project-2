@@ -9,7 +9,7 @@ export function updateMobileMenu() {
 
     if (isLoggedIn()) {
         mobileMenu.innerHTML = `
-            <a href="home.html" class="d-block mb-2 text-white text-decoration-none">Home</a>
+            <a href="/index.html" class="d-block mb-2 text-white text-decoration-none">Home</a>
             <a href="auctions.html" class="d-block mb-2 text-white text-decoration-none">Auctions</a>
             <a href="/profile/profile.html" class="d-block mb-2 text-white text-decoration-none">Profile</a>
             <a href="#" id="logout" class="d-block mb-2 text-white text-decoration-none">Logout</a>
@@ -17,7 +17,7 @@ export function updateMobileMenu() {
         setupLogout();
     } else {
         mobileMenu.innerHTML = `
-            <a href="home.html" class="d-block mb-2 text-white text-decoration-none">Home</a>
+            <a href="/index.html" class="d-block mb-2 text-white text-decoration-none">Home</a>
             <a href="login.html" class="d-block mb-2 text-white text-decoration-none">Login</a>
             <a href="register.html" class="d-block mb-2 text-white text-decoration-none">Register</a>
         `;
