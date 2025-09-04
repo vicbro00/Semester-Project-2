@@ -7,6 +7,7 @@ import { loginUser } from "./js/ui/login.js";
 import { fetchProfile, createButton, editProfileButton, showListings } from "./js/ui/profile.js";
 import { updateProfile } from "./js/ui/update-profile.js";
 import { createListing } from "./js/ui/create-listing.js";
+import { fetchSingleListing } from "./js/ui/bidding.js";
 
 updateMobileMenu();
 
@@ -38,13 +39,14 @@ if (path.includes("login.html")) {
 if (path.includes("update-profile.html")) {
     updateProfile();
 }
-
 if (path.endsWith("/profile.html")) {
     fetchProfile();
     editProfileButton();
     showListings();
 }
-
 if (path.includes("create.html")) {
     createListing();
+}
+if (path.includes("bidding.html")) {
+    fetchSingleListing();
 }

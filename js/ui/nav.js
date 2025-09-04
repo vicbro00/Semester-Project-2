@@ -12,7 +12,6 @@ export function updateMobileMenu() {
     if (isLoggedIn()) {
         mobileMenu.innerHTML = `
             <a href="/index.html" class="d-block mb-2 text-white text-decoration-none">Home</a>
-            <a href="auctions.html" class="d-block mb-2 text-white text-decoration-none">Auctions</a>
             <a href="/profile/profile.html" class="d-block mb-2 text-white text-decoration-none">Profile</a>
             <a href="#" id="logout" class="d-block mb-2 text-white text-decoration-none">Logout</a>
         `;
@@ -39,13 +38,17 @@ export function setupLogout() {
 
 export async function accountInfo() {
     const navbarContainer = document.getElementById("accountInfoNavbar");
-    if (!navbarContainer) return;
+    const offcanvasContainer = document.getElementById("accountInfo");
+
+    if (!navbarContainer && !offcanvasContainer) return;
 
     const token = localStorage.getItem("token");
     const username = localStorage.getItem("username");
 
     if (!token || !username) {
-        navbarContainer.innerHTML = `<p class="text-danger">Log in to see account info</p>`;
+        const message = `<p class="text-danger">Log in to see account info</p>`;
+        if (navbarContainer) navbarContainer.innerHTML = message;
+        if (offcanvasContainer) offcanvasContainer.innerHTML = message;
         return;
     }
 
@@ -64,13 +67,18 @@ export async function accountInfo() {
         if (!response.ok) throw new Error("Failed to fetch profile");
 
         const data = await response.json();
-
-        navbarContainer.innerHTML = `
+        const content = `
             <button class="btn btn-sm btn-warning mb-1">Your bids</button>
             <span class="nav-text">Account Credit: $${data.data.credits}</span>
         `;
+
+        if (navbarContainer) navbarContainer.innerHTML = content;
+        if (offcanvasContainer) offcanvasContainer.innerHTML = content;
+
     } catch (error) {
         console.error("Error fetching account info:", error);
-        navbarContainer.innerHTML = `<p class="text-danger">Error loading account info</p>`;
+        const errorMessage = `<p class="text-danger">Error loading account info</p>`;
+        if (navbarContainer) navbarContainer.innerHTML = errorMessage;
+        if (offcanvasContainer) offcanvasContainer.innerHTML = errorMessage;
     }
 }

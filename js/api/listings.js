@@ -85,7 +85,6 @@ export async function getListing() {
         const response = await fetch(`${API_BASE_URL}/${listingId}`);
         if (!response.ok) throw new Error("Failed to fetch listing");
         const { data: listing } = await response.json();
-        console.log("Fetched listing:", listing);
 
         const container = document.getElementById("singleListingContainer");
         if (!container) return;
@@ -114,6 +113,7 @@ export async function getListing() {
             <p class="card-text">Bids: ${bidCount}</p>
             <p class="card-text">Highest bid: $${highestBid}</p>
             <p class="card-text">Ends at: ${new Date(listing.endsAt).toLocaleDateString()}</p>
+            <button class="btn btn-primary-custom" onclick="location.href='/listings/bidding.html?id=${listing.id}'">Place Bid</button>
         `;
 
         col.appendChild(card);
