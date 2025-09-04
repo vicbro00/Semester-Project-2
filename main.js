@@ -4,7 +4,7 @@ import { searchListings } from "./js/ui/index.js";
 import { filterDropdown } from "./js/ui/index.js";
 import { registerUser } from "./js/ui/register.js";
 import { loginUser } from "./js/ui/login.js";
-import { fetchProfile } from "./js/ui/profile.js";
+import { fetchProfile, createButton, editProfileButton, showListings } from "./js/ui/profile.js";
 import { updateProfile } from "./js/ui/update-profile.js";
 
 updateMobileMenu();
@@ -15,10 +15,13 @@ fetchListings();
 sortListings();
 filterDropdown(sortListings);
 
+createButton();
+
 const path = window.location.pathname;
 
 if (path.includes("index.html")) {
     searchListings();
+    fetchListings();
 }
 if (path.includes("single-listing.html")) {
     getListing();
@@ -35,4 +38,6 @@ if (path.includes("update-profile.html")) {
 
 if (path.endsWith("/profile.html")) {
     fetchProfile();
+    editProfileButton();
+    showListings();
 }
