@@ -116,16 +116,61 @@ export async function showListings() {
                     return;
                 }
 
-                container.innerHTML = listings.map(listing => `
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <h5 class="card-title">${listing.title}</h5>
-                            <p class="card-text">${listing.description || "No description"}</p>
-                            <p><strong>Tags:</strong> ${listing.tags.join(", ")}</p>
-                            <p><strong>Ends At:</strong> ${new Date(listing.endsAt).toLocaleDateString()}</p>
+                container.innerHTML = listings.map(listing => {
+                    const imageUrl = listing.media?.[0]?.url || "/images/imagePlaceholder.png";
+                    const imageAlt = listing.media?.[0]?.alt || "Listing image";
+
+                    return `
+                        <div class="card mb-3">
+                            <img src="${imageUrl}" alt="${imageAlt}" class="card-img-top">
+                            <div class="card-body">
+                                <h5 class="card-title">${listing.title}</h5>
+                                <p class="card-text">${listing.description || "No description"}</p>
+                                <p><strong>Tags:</strong> ${listing.tags.join(", ")}</p>
+                                <p><strong>Ends At:</strong> ${new Date(listing.endsAt).toLocaleDateString()}</p>
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-sm btn-warning edit-listing" data-id="${listing.id}">Edit</button>
+                                    <button class="btn btn-sm btn-danger delete-listing" data-id="${listing.id}">Delete</button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                `).join("");
+                    `;
+                }).join("");
+
+                // Attach events for edit and delete buttons
+                container.querySelectorAll(".edit-listing").forEach(button => {
+                    button.addEventListener("click", (e) => {
+                        const listingId = e.target.dataset.id;
+                        window.location.href = `/listings/edit-listing.html?id=${listingId}`;
+                    });
+                });
+
+                container.querySelectorAll(".delete-listing").forEach(button => {
+                    button.addEventListener("click", async (e) => {
+                        const listingId = e.target.dataset.id;
+                        const confirmDelete = confirm("Are you sure you want to delete this listing?");
+                        if (!confirmDelete) return;
+
+                        try {
+                            const deleteResponse = await fetch(`https://v2.api.noroff.dev/auction/listings/${listingId}`, {
+                                method: "DELETE",
+                                headers: {
+                                    "Authorization": `Bearer ${token}`,
+                                    "X-Noroff-API-Key": API_KEY,
+                                },
+                            });
+
+                            if (!deleteResponse.ok) {
+                                throw new Error("Failed to delete listing");
+                            }
+
+                            alert("Listing deleted successfully.");
+                            e.target.closest(".card").remove();
+                        } catch (error) {
+                            alert(`Error deleting listing: ${error.message}`);
+                        }
+                    });
+                });
 
             } catch (error) {
                 container.innerHTML = `<p class="text-danger">Error fetching listings: ${error.message}</p>`;
@@ -135,6 +180,78 @@ export async function showListings() {
             container.innerHTML = "";
         }
     });
+}
+
+export async function showBiddedListings() {
+    const container = document.getElementById("biddedListings");
+
+    if (!container) return;
+
+    const token = localStorage.getItem("token");
+    const username = localStorage.getItem("username");
+
+    if (!token || !username) {
+        container.innerHTML = `<p class="text-danger">You must be logged in to view your bidded listings.</p>`;
+        return;
+    }
+
+    try {
+        const response = await fetch(`https://v2.api.noroff.dev/auction/profiles/${username}/bids?_listings=true`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+                "X-Noroff-API-Key": API_KEY,
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch bidded listings");
+        }
+
+        const data = await response.json();
+        const bids = data.data;
+
+        if (!bids || bids.length === 0) {
+            container.innerHTML = "<p>You haven’t placed any bids yet.</p>";
+            return;
+        }
+
+        container.innerHTML = `
+            <h3 class="mt-4">Listings I Have Bid On</h3>
+            ${bids.map(bid => {
+                if (!bid.listing) {
+                    return `
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <p class="text-muted">Listing unavailable (may have been deleted)</p>
+                                <p><strong>Your Bid:</strong> $${bid.amount}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                const imageUrl = bid.listing.media?.[0]?.url || "/images/imagePlaceholder.png";
+                const imageAlt = bid.listing.media?.[0]?.alt || "Listing image";
+
+                return `
+                    <div class="card mb-3">
+                        <img src="${imageUrl}" alt="${imageAlt}" class="card-img-top">
+                        <div class="card-body">
+                            <h5 class="card-title">${bid.listing.title}</h5>
+                            <p class="card-text">${bid.listing.description || "No description"}</p>
+                            <p><strong>Your Bid:</strong> $${bid.amount}</p>
+                            <p><strong>Ends At:</strong> ${new Date(bid.listing.endsAt).toLocaleDateString()}</p>
+                            <a href="/listings/single-listing.html?id=${bid.listing.id}" class="btn btn-sm btn-primary-custom">View Listing</a>
+                        </div>
+                    </div>
+                `;
+            }).join("")}
+        `;
+    } catch (error) {
+        console.error("Error fetching bidded listings:", error);
+        container.innerHTML = `<p class="text-danger">Error loading bidded listings: ${error.message}</p>`;
+    }
 }
 
 export function createButton() {

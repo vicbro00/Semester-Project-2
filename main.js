@@ -4,10 +4,11 @@ import { searchListings } from "./js/ui/index.js";
 import { filterDropdown } from "./js/ui/index.js";
 import { registerUser } from "./js/ui/register.js";
 import { loginUser } from "./js/ui/login.js";
-import { fetchProfile, createButton, editProfileButton, showListings } from "./js/ui/profile.js";
+import { fetchProfile, createButton, editProfileButton, showListings, showBiddedListings } from "./js/ui/profile.js";
 import { updateProfile } from "./js/ui/update-profile.js";
 import { createListing } from "./js/ui/create-listing.js";
 import { fetchSingleListing } from "./js/ui/bidding.js";
+import { editListing } from "./js/ui/edit-listing.js";
 
 updateMobileMenu();
 
@@ -43,10 +44,14 @@ if (path.endsWith("/profile.html")) {
     fetchProfile();
     editProfileButton();
     showListings();
+    showBiddedListings();
 }
 if (path.includes("create.html")) {
     createListing();
 }
 if (path.includes("bidding.html")) {
     fetchSingleListing();
+}
+if (path.includes("edit-listing.html")) {
+    editListing();
 }
