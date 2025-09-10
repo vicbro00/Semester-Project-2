@@ -40,7 +40,7 @@ if (path.includes("login.html")) {
 if (path.includes("update-profile.html")) {
     updateProfile();
 }
-if (path.endsWith("/profile.html")) {
+if (path.endsWith("profile.html")) {
     fetchProfile();
     editProfileButton();
     showListings();

@@ -113,14 +113,87 @@ export async function getListing() {
             <p class="card-text">Bids: ${bidCount}</p>
             <p class="card-text">Highest bid: $${highestBid}</p>
             <p class="card-text">Ends at: ${new Date(listing.endsAt).toLocaleDateString()}</p>
-            <button class="btn btn-primary-custom" onclick="location.href='/listings/bidding.html?id=${listing.id}'">Place Bid</button>
+            <button class="btn btn-primary-custom mb-2" onclick="location.href='/listings/bidding.html?id=${listing.id}'">Place Bid</button>
         `;
+
+        // --- Add "Show Bidding History" button ---
+        const historyBtn = document.createElement("button");
+        historyBtn.textContent = "Show Bidding History";
+        historyBtn.className = "btn btn-secondary-custom";
+
+        let historyVisible = false;
+        let historyContainer;
+
+        historyBtn.addEventListener("click", async () => {
+            historyVisible = !historyVisible;
+
+            if (historyVisible) {
+                historyBtn.textContent = "Hide Bidding History";
+
+                if (!historyContainer) {
+                    historyContainer = document.createElement("div");
+                    historyContainer.classList.add("mt-3");
+                    card.appendChild(historyContainer);
+
+                    await biddingHistory(listing.id, historyContainer);
+                } else {
+                    historyContainer.style.display = "block";
+                }
+            } else {
+                historyBtn.textContent = "Show Bidding History";
+                if (historyContainer) historyContainer.style.display = "none";
+            }
+        });
+
+        card.appendChild(historyBtn);
 
         col.appendChild(card);
         container.appendChild(col);
 
     } catch (error) {
         console.error("Error fetching listing:", error);
+    }
+}
+
+async function biddingHistory(listingId, container) {
+    const token = localStorage.getItem("token");
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/${listingId}?_bids=true`, {
+            headers: {
+                "Content-Type": "application/json",
+                ...(token && { "Authorization": `Bearer ${token}` }),
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch bidding history");
+
+        const { data: listing } = await response.json();
+        const bids = listing.bids || [];
+
+        if (bids.length === 0) {
+            container.innerHTML = "<p>No bids have been placed on this listing yet.</p>";
+            return;
+        }
+
+        const list = document.createElement("ul");
+        list.classList.add("list-group");
+
+        bids
+            .sort((a, b) => new Date(b.created) - new Date(a.created))
+            .forEach(bid => {
+                const item = document.createElement("li");
+                item.classList.add("list-group-item");
+                item.textContent = `User: ${bid.bidder?.name || "Unknown"} — $${bid.amount} (${new Date(bid.created).toLocaleString()})`;
+                list.appendChild(item);
+            });
+
+        container.innerHTML = "<h4>Bidding History</h4>";
+        container.appendChild(list);
+
+    } catch (error) {
+        console.error("Error fetching bidding history:", error);
+        container.innerHTML = `<p class="text-danger">Error: ${error.message}</p>`;
     }
 }
 
