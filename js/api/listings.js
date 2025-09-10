@@ -3,7 +3,7 @@ import { API_BASE_URL, options } from "./api.js";
 // Function to fetch listings from API
 export async function fetchListings() {
     try {
-        const response = await fetch(`${API_BASE_URL}?_bids=true`, options());
+        const response = await fetch(`${API_BASE_URL}?_bids=true&sort=created&sortOrder=desc`, options());
         if (!response.ok) throw new Error("Failed to fetch listings");
 
         const data = await response.json();
