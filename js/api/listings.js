@@ -3,7 +3,7 @@ import { API_BASE_URL, options } from "./api.js";
 // Function to fetch listings from API
 export async function fetchListings() {
     try {
-        const response = await fetch(API_BASE_URL, options());
+        const response = await fetch(`${API_BASE_URL}?_bids=true`, options());
         if (!response.ok) throw new Error("Failed to fetch listings");
 
         const data = await response.json();
@@ -41,9 +41,11 @@ export async function displayListings(listings) {
 
         const description = listing.description || "No description available.";
 
-        const bidCount = listing._count?.bids || 0;
+        const bidCount = listing.bids?.length || 0;
 
-        const highestBid = listing._count?.bids || 0;
+        const highestBid = bidCount > 0
+            ? Math.max(...listing.bids.map(bid => bid.amount))
+            : 0;
 
         card.innerHTML = `
             <h2 class="card-title">${listing.title}</h2>
@@ -82,7 +84,7 @@ export async function getListing() {
     }
 
     try {
-        const response = await fetch(`${API_BASE_URL}/${listingId}`);
+        const response = await fetch(`${API_BASE_URL}/${listingId}?_bids=true`);
         if (!response.ok) throw new Error("Failed to fetch listing");
         const { data: listing } = await response.json();
 
@@ -104,7 +106,9 @@ export async function getListing() {
 
         const description = listing.description || "No description available.";
         const bidCount = listing._count?.bids || 0;
-        const highestBid = listing._count?.bids || 0;
+        const highestBid = bidCount > 0
+            ? Math.max(...listing.bids.map(bid => bid.amount))
+            : 0;
 
         card.innerHTML = `
             <h2 class="card-title">${listing.title}</h2>
