@@ -4,13 +4,22 @@ body {
     font-family: 'Montserrat', 'Lora', 'Open Sans';
 }
 
+html {
+    overflow-x: hidden;
+}
+
+.row {
+  margin-left: 0;
+  margin-right: 0;
+}
+
 /* Loader */
 .loader {
-  border: 6px solid #f3f3f3;
-  border-top: 6px solid #FFD700;
+  border: 0.4rem solid #f3f3f3;
+  border-top: 0.4rem solid #FFD700;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 2.5rem;
+  height: 2.5rem;
   animation: spin 1s linear infinite;
   position: fixed;
   top: 50%;
@@ -32,7 +41,7 @@ body {
 h1 {
     font-family: 'Montserrat';
     color: #FFD7F3;
-    font-size: 2em;
+    font-size: 2rem;
     margin: auto;
 }
 
@@ -60,7 +69,7 @@ h5 {
 
 .hamb-icon {
     color: #FFD7F3;
-    font-size: 2em;
+    font-size: 2rem;
 }
 
 button[data-bs-toggle="offcanvas"] {
@@ -73,9 +82,15 @@ button[data-bs-toggle="offcanvas"] {
 
 /* Cards */
 .card-image {
-    border-radius: 10px;
+    border-radius: 2rem;
     max-width: 50%;
     height: auto;
+}
+
+.card {
+    background-color: #FFD7F3;
+    border-radius: 1px;
+    border: 1px solid #9576DD;
 }
 
 /* Buttons */
@@ -84,7 +99,7 @@ button[data-bs-toggle="offcanvas"] {
     border: none;
     color: black;
     font-weight: bold;
-    border-radius: 20px;
+    border-radius: 2px;
     padding: 0.4rem 1rem;
 }
 
@@ -95,12 +110,15 @@ button[data-bs-toggle="offcanvas"] {
 
 /* Filter button */
 #filterDropdown {
-    min-width: 160px;
+    min-width: 10rem;
     padding: 0.5rem 0;
     background-color: #fff;
     border: 1px solid rgba(0,0,0,.15);
     border-radius: 0.25rem;
     box-shadow: 0 .5rem 1rem rgba(0,0,0,.175);
+    top: 100%;
+    left: 0;
+    z-index: 1000;
 }
 
 #filterDropdown .dropdown-item {
@@ -119,9 +137,9 @@ button[data-bs-toggle="offcanvas"] {
 /* Forms */
 .form-box {
     background-color: #FFD7F3;
-    border-radius: 15px;
+    border-radius: 2rem;
     padding: 2rem;
-    max-width: 350px;
+    max-width: 20rem;
     margin: 2rem auto;
 }
 
