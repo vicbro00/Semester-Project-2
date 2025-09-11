@@ -1,4 +1,5 @@
 import { API_KEY } from "../api/api.js";
+import { showLoader } from "./loader.js";
 
 const username = localStorage.getItem("username");
 const updateProfileURL = `https://v2.api.noroff.dev/auction/profiles/${username}`;
@@ -33,6 +34,7 @@ export function updateProfile() {
             return;
         }
 
+        showLoader();
         try {
             const response = await fetch(updateProfileURL, {
                 method: "PUT",
@@ -55,6 +57,8 @@ export function updateProfile() {
         } catch (error) {
             console.error("Error updating profile:", error);
             alert("Error updating profile: " + error.message);
+        } finally {
+            hideLoader();
         }
     });
 }

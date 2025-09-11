@@ -1,7 +1,9 @@
+import { showLoader, hideLoader } from "../ui/loader.js";
 import { API_BASE_URL, options } from "./api.js";
 
 // Function to fetch listings from API
 export async function fetchListings() {
+    showLoader();
     try {
         const response = await fetch(`${API_BASE_URL}?_bids=true&sort=created&sortOrder=desc`, options());
         if (!response.ok) throw new Error("Failed to fetch listings");
@@ -10,6 +12,8 @@ export async function fetchListings() {
         displayListings(Array.isArray(data.data) ? data.data : [data.data]);
     } catch (error) {
         console.error(error);
+    } finally {
+        hideLoader();
     }
 }
 
@@ -83,6 +87,7 @@ export async function getListing() {
         return;
     }
 
+    showLoader();
     try {
         const response = await fetch(`${API_BASE_URL}/${listingId}?_bids=true`);
         if (!response.ok) throw new Error("Failed to fetch listing");
@@ -156,12 +161,15 @@ export async function getListing() {
 
     } catch (error) {
         console.error("Error fetching listing:", error);
+    } finally {
+        hideLoader();
     }
 }
 
 async function biddingHistory(listingId, container) {
     const token = localStorage.getItem("token");
 
+    showLoader();
     try {
         const response = await fetch(`${API_BASE_URL}/${listingId}?_bids=true`, {
             headers: {
@@ -198,6 +206,8 @@ async function biddingHistory(listingId, container) {
     } catch (error) {
         console.error("Error fetching bidding history:", error);
         container.innerHTML = `<p class="text-danger">Error: ${error.message}</p>`;
+    } finally {
+        hideLoader();
     }
 }
 

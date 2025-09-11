@@ -1,4 +1,5 @@
 import { API_KEY } from "../api/api.js";
+import { showLoader, hideLoader } from "./loader.js";
 
 const main = document.querySelector("main");
 
@@ -15,6 +16,7 @@ export async function fetchProfile() {
     const username = localStorage.getItem("username");
     const profileURL = `https://v2.api.noroff.dev/auction/profiles/${username}`;
 
+    showLoader();
     try {
         const response = await fetch(profileURL, {
             method: "GET",
@@ -34,6 +36,8 @@ export async function fetchProfile() {
     } catch (error) {
         console.error("Error fetching profile:", error);
         main.innerHTML = `<p class="text-danger">Error loading profile: ${error.message}</p>`;
+    } finally {
+        hideLoader();
     }
 }
 
@@ -94,6 +98,7 @@ export async function showListings() {
                 return;
             }
 
+            showLoader();
             try {
                 const response = await fetch(`https://v2.api.noroff.dev/auction/profiles/${username}/listings`, {
                     method: "GET",
@@ -174,6 +179,8 @@ export async function showListings() {
 
             } catch (error) {
                 container.innerHTML = `<p class="text-danger">Error fetching listings: ${error.message}</p>`;
+            } finally {
+                hideLoader();
             }
         } else {
             btn.textContent = "Show My Listings";

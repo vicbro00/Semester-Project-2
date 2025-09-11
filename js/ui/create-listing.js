@@ -1,4 +1,5 @@
 import { API_KEY } from "../api/api.js";
+import { showLoader, hideLoader } from "./loader.js";
 
 export function createListing() {
     const form = document.getElementById("createListingForm");
@@ -32,6 +33,7 @@ export function createListing() {
             endsAt: new Date(endsAt).toISOString()
         };
 
+        showLoader();
         try {
             const response = await fetch("https://v2.api.noroff.dev/auction/listings", {
                 method: "POST",
@@ -53,6 +55,8 @@ export function createListing() {
 
         } catch (error) {
             message.innerHTML = `<p class="text-danger">${error.message}</p>`;
+        } finally {
+            hideLoader();
         }
     });
 }

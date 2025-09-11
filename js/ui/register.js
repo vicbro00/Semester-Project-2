@@ -1,4 +1,5 @@
-import { API_KEY, options } from "../api/api.js";
+import { API_KEY } from "../api/api.js";
+import { showLoader, hideLoader } from "./loader.js";
 
 const registerURL = "https://v2.api.noroff.dev/auth/register";
 
@@ -36,6 +37,7 @@ export function registerUser() {
             bio: "This is my profile bio",
         };
 
+        showLoader();
         try {
             const response = await fetch(registerURL, {
                 method: "POST",
@@ -59,6 +61,8 @@ export function registerUser() {
         } catch (error) {
             console.error("Error registering user:", error);
             alert("Registration failed: " + error.message);
+        } finally {
+            hideLoader();
         }
     });
 }

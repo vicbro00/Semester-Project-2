@@ -55,3 +55,9 @@ if (path.includes("bidding.html")) {
 if (path.includes("edit-listing.html")) {
     editListing();
 }
+
+window.addEventListener("pageshow", () => {
+  if (window.location.pathname.includes("index.html")) {
+    fetchListings();
+  }
+});

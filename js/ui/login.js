@@ -1,4 +1,5 @@
 import { API_KEY } from "../api/api.js";
+import { showLoader, hideLoader } from "./loader.js";
 import { updateMobileMenu } from "./nav.js";
 
 const loginURL = "https://v2.api.noroff.dev/auth/login";
@@ -28,6 +29,7 @@ export function loginUser() {
 
         const userCredentials = { email, password };
 
+        showLoader();
         try {
             const response = await fetch(loginURL, {
                 method: "POST",
@@ -60,6 +62,8 @@ export function loginUser() {
         } catch (error) {
             console.error("Error logging in:", error);
             alert("Login failed: " + error.message);
+        } finally {
+            hideLoader();
         }
     });
 }

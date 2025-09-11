@@ -1,4 +1,5 @@
 import { API_KEY } from "../api/api.js";
+import { showLoader, hideLoader } from "./loader.js";
 
 export async function editListing() {
     const form = document.getElementById("editListingForm");
@@ -17,6 +18,7 @@ export async function editListing() {
         return;
     }
 
+    showLoader();
     try {
         const response = await fetch(`https://v2.api.noroff.dev/auction/listings/${listingId}`, {
             headers: {
@@ -36,6 +38,8 @@ export async function editListing() {
         endsAtInput.value = data.endsAt ? new Date(data.endsAt).toISOString().slice(0, 16) : "";
     } catch (error) {
         console.error("Error fetching listing:", error);
+    } finally {
+        hideLoader();
     }
 
     form.addEventListener("submit", async (e) => {
@@ -48,6 +52,7 @@ export async function editListing() {
             endsAt: new Date(endsAtInput.value).toISOString(),
         };
 
+        showLoader();
         try {
             const response = await fetch(`https://v2.api.noroff.dev/auction/listings/${listingId}`, {
                 method: "PUT",
@@ -65,6 +70,8 @@ export async function editListing() {
             window.location.href = `/profile/profile.html`;
         } catch (error) {
             alert(`Error updating listing: ${error.message}`);
+        } finally {
+            hideLoader();
         }
     });
 }

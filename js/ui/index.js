@@ -1,7 +1,9 @@
 import { displayListings } from "../api/listings.js";
 import { API_BASE_URL, options } from "../api/api.js";
+import { showLoader, hideLoader } from "./loader.js";
 
 export async function searchListings() {
+    showLoader();
     try {
         const response = await fetch(API_BASE_URL, options());
         if (!response.ok) throw new Error("Failed to fetch listings");
@@ -19,6 +21,8 @@ export async function searchListings() {
         displayListings(filtered);
     } catch (error) {
         console.error("Error searching listings:", error);
+    } finally {
+        hideLoader();
     }
 }
 

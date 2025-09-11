@@ -1,4 +1,5 @@
 import { API_KEY } from "../api/api.js";
+import { showLoader, hideLoader } from "./loader.js";
 
 let currentListing = null;
 
@@ -13,6 +14,7 @@ export async function fetchSingleListing() {
     if (!listingContainer || !bidForm || !bidMessage) return;
 
     async function fetchListing() {
+        showLoader();
         try {
             const response = await fetch(`https://v2.api.noroff.dev/auction/listings/${listingId}?_bids=true`, {
                 headers: {
@@ -41,6 +43,8 @@ export async function fetchSingleListing() {
             `;
         } catch (error) {
             listingContainer.innerHTML = `<p class="text-danger">${error.message}</p>`;
+        } finally {
+            hideLoader();
         }
     }
 
@@ -75,6 +79,7 @@ export async function fetchSingleListing() {
             return;
         }
 
+        showLoader();
         try {
             const response = await fetch(`https://v2.api.noroff.dev/auction/listings/${listingId}/bids`, {
                 method: "POST",
@@ -96,6 +101,8 @@ export async function fetchSingleListing() {
             fetchListing();
         } catch (error) {
             bidMessage.innerHTML = `<p class="text-danger">${error.message}</p>`;
+        } finally {
+            hideLoader();
         }
     });
 
