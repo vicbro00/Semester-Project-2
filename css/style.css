@@ -91,6 +91,11 @@ button[data-bs-toggle="offcanvas"] {
     background-color: #FFD7F3;
     border-radius: 1px;
     border: 1px solid #9576DD;
+    border-radius: 25px;
+}
+
+.card-image {
+    margin: 2rem auto;
 }
 
 /* Buttons */
@@ -106,6 +111,10 @@ button[data-bs-toggle="offcanvas"] {
 .arrow-icon {
     font-size: 1.5rem;
     color: #9576DD;
+}
+
+#makeBidBtn {
+    margin: 2rem auto;
 }
 
 /* Filter button */
@@ -149,4 +158,13 @@ fieldset {
     max-width: 20em;
     width: 100%;
     border: 2px solid #9576DD;
+}
+
+.signin-link {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.signin-link:hover {
+    text-decoration: underline;
 }

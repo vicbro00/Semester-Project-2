@@ -31,10 +31,11 @@ export async function displayListings(listings) {
 
     listings.forEach(listing => {
         const col = document.createElement("div");
-        col.classList.add("col-12", "col-md-6", "col-lg-4", "mb-4");
+        col.classList.add("col-10", "col-md-6", "col-lg-4", "mb-4", "mt-4");
 
         const card = document.createElement("div");
-        card.classList.add("card", "h-100");
+        card.classList.add("card", "h-100", "d-flex", "flex-column", "align-items-center", "text-center");
+        card.dataset.created = listing.created;
 
         card.dataset.created = listing.created;
 
@@ -43,8 +44,6 @@ export async function displayListings(listings) {
         const imageUrl = isValidUrl(listing.media?.[0]?.url) ? listing.media[0].url : imagePlaceholder;
         const imageAlt = listing.media?.[0]?.alt || "Listing image";
 
-        const description = listing.description || "No description available.";
-
         const bidCount = listing.bids?.length || 0;
 
         const highestBid = bidCount > 0
@@ -52,13 +51,10 @@ export async function displayListings(listings) {
             : 0;
 
         card.innerHTML = `
+            <img class="card-image" src="${imageUrl}" alt="${imageAlt}" onerror="this.onerror=null;this.src='${imagePlaceholder}'"/>
             <h2 class="card-title">${listing.title}</h2>
-            <p class="card-text">${description}</p>
-            <img class="card-image" src="${imageUrl}" alt="${imageAlt}" onerror="this.onerror=null;this.src='${imagePlaceholder}'" />
-            <p class="card-text">Bids: ${bidCount}</p>
-            <p class="card-text">Highest bid: $${highestBid}</p>
             <p class="card-text">Ends at: ${new Date(listing.endsAt).toLocaleDateString()}</p>
-            <button class="btn-primary-custom" onclick="location.href='/listings/single-listing.html?id=${listing.id}'">More info</button>
+            <button id="makeBidBtn" class="btn-primary-custom" onclick="location.href='/listings/single-listing.html?id=${listing.id}'">More info</button>
         `;
         col.appendChild(card);
         container.appendChild(col);
@@ -99,10 +95,10 @@ export async function getListing() {
         container.innerHTML = "";
 
         const col = document.createElement("div");
-        col.classList.add("col-12", "col-md-6", "col-lg-4", "mb-4");
+        col.classList.add("col-10", "col-md-6", "col-lg-4", "mb-4", "mt-4");
 
         const card = document.createElement("div");
-        card.classList.add("card", "h-100");
+        card.classList.add("card", "h-100", "d-flex", "flex-column", "align-items-center", "text-center");
         card.dataset.created = listing.created;
 
         const imagePlaceholder = "../images/imagePlaceholder.png";
@@ -116,96 +112,20 @@ export async function getListing() {
             : 0;
 
         card.innerHTML = `
+            <img class="card-image" src="${imageUrl}" alt="${imageAlt}" onerror="this.onerror=null;this.src='${imagePlaceholder}'"/>
             <h2 class="card-title">${listing.title}</h2>
-            <p class="card-text">${description}</p>
-            <img class="card-image" src="${imageUrl}" alt="${imageAlt}" onerror="this.onerror=null;this.src='${imagePlaceholder}'" />
             <p class="card-text">Bids: ${bidCount}</p>
             <p class="card-text">Highest bid: $${highestBid}</p>
             <p class="card-text">Ends at: ${new Date(listing.endsAt).toLocaleDateString()}</p>
+            <p class="card-text">${description}</p>
             <button class="btn btn-primary-custom mb-2" onclick="location.href='/listings/bidding.html?id=${listing.id}'">Place Bid</button>
         `;
-
-        // --- Add "Show Bidding History" button ---
-        const historyBtn = document.createElement("button");
-        historyBtn.textContent = "Show Bidding History";
-        historyBtn.className = "btn btn-secondary-custom";
-
-        let historyVisible = false;
-        let historyContainer;
-
-        historyBtn.addEventListener("click", async () => {
-            historyVisible = !historyVisible;
-
-            if (historyVisible) {
-                historyBtn.textContent = "Hide Bidding History";
-
-                if (!historyContainer) {
-                    historyContainer = document.createElement("div");
-                    historyContainer.classList.add("mt-3");
-                    card.appendChild(historyContainer);
-
-                    await biddingHistory(listing.id, historyContainer);
-                } else {
-                    historyContainer.style.display = "block";
-                }
-            } else {
-                historyBtn.textContent = "Show Bidding History";
-                if (historyContainer) historyContainer.style.display = "none";
-            }
-        });
-
-        card.appendChild(historyBtn);
 
         col.appendChild(card);
         container.appendChild(col);
 
     } catch (error) {
         console.error("Error fetching listing:", error);
-    } finally {
-        hideLoader();
-    }
-}
-
-async function biddingHistory(listingId, container) {
-    const token = localStorage.getItem("token");
-
-    showLoader();
-    try {
-        const response = await fetch(`${API_BASE_URL}/${listingId}?_bids=true`, {
-            headers: {
-                "Content-Type": "application/json",
-                ...(token && { "Authorization": `Bearer ${token}` }),
-            },
-        });
-
-        if (!response.ok) throw new Error("Failed to fetch bidding history");
-
-        const { data: listing } = await response.json();
-        const bids = listing.bids || [];
-
-        if (bids.length === 0) {
-            container.innerHTML = "<p>No bids have been placed on this listing yet.</p>";
-            return;
-        }
-
-        const list = document.createElement("ul");
-        list.classList.add("list-group");
-
-        bids
-            .sort((a, b) => new Date(b.created) - new Date(a.created))
-            .forEach(bid => {
-                const item = document.createElement("li");
-                item.classList.add("list-group-item");
-                item.textContent = `User: ${bid.bidder?.name || "Unknown"} — $${bid.amount} (${new Date(bid.created).toLocaleString()})`;
-                list.appendChild(item);
-            });
-
-        container.innerHTML = "<h4>Bidding History</h4>";
-        container.appendChild(list);
-
-    } catch (error) {
-        console.error("Error fetching bidding history:", error);
-        container.innerHTML = `<p class="text-danger">Error: ${error.message}</p>`;
     } finally {
         hideLoader();
     }

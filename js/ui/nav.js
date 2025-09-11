@@ -20,7 +20,7 @@ export function updateMobileMenu() {
         mobileMenu.innerHTML = `
             <a href="/index.html" class="d-block mb-2 text-white text-decoration-none">Home</a>
             <a href="/profile/login.html" class="d-block mb-2 text-white text-decoration-none">Login</a>
-            <a href="register.html" class="d-block mb-2 text-white text-decoration-none">Register</a>
+            <a href="/profile/register.html" class="d-block mb-2 text-white text-decoration-none">Register</a>
         `;
     }
 }
@@ -46,9 +46,8 @@ export async function accountInfo() {
     const username = localStorage.getItem("username");
 
     if (!token || !username) {
-        const message = `<p class="text-danger">Log in to see account info</p>`;
-        if (navbarContainer) navbarContainer.innerHTML = message;
-        if (offcanvasContainer) offcanvasContainer.innerHTML = message;
+        if (navbarContainer) navbarContainer.innerHTML = "";
+        if (offcanvasContainer) offcanvasContainer.innerHTML = "";
         return;
     }
 
@@ -77,8 +76,7 @@ export async function accountInfo() {
 
     } catch (error) {
         console.error("Error fetching account info:", error);
-        const errorMessage = `<p class="text-danger">Error loading account info</p>`;
-        if (navbarContainer) navbarContainer.innerHTML = errorMessage;
-        if (offcanvasContainer) offcanvasContainer.innerHTML = errorMessage;
+        if (navbarContainer) navbarContainer.innerHTML = "";
+        if (offcanvasContainer) offcanvasContainer.innerHTML = "";
     }
 }

@@ -1,110 +1,185 @@
-import { API_KEY } from "../api/api.js";
+import { API_KEY, API_BASE_URL } from "../api/api.js";
 import { showLoader, hideLoader } from "./loader.js";
 
-let currentListing = null;
-
-const params = new URLSearchParams(window.location.search);
-const listingId = params.get("id");
-
 export async function fetchSingleListing() {
+    const token = localStorage.getItem("token");
     const listingContainer = document.getElementById("listingContainer");
     const bidForm = document.getElementById("bidForm");
     const bidMessage = document.getElementById("bidMessage");
 
-    if (!listingContainer || !bidForm || !bidMessage) return;
+    if (!listingContainer) return;
 
-    async function fetchListing() {
-        showLoader();
-        try {
-            const response = await fetch(`https://v2.api.noroff.dev/auction/listings/${listingId}?_bids=true`, {
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-Noroff-API-Key": API_KEY,
+    showLoader();
+    try {
+        const params = new URLSearchParams(window.location.search);
+        const listingId = params.get("id");
+        if (!listingId) throw new Error("No listing ID found in URL");
+
+        const response = await fetch(`${API_BASE_URL}/${listingId}?_bids=true`, {
+            headers: {
+                "Content-Type": "application/json",
+                "X-Noroff-API-Key": API_KEY,
+                ...(token && { "Authorization": `Bearer ${token}` })
+            }
+        });
+        if (!response.ok) throw new Error("Failed to fetch listing");
+
+        const { data: listing } = await response.json();
+
+        listingContainer.innerHTML = "";
+
+        const col = document.createElement("div");
+        col.classList.add("col-10", "col-md-6", "col-lg-4", "mb-4", "mt-4");
+
+        const card = document.createElement("div");
+        card.classList.add("card", "h-100", "d-flex", "flex-column", "align-items-center", "text-center");
+        card.dataset.created = listing.created;
+
+        const imagePlaceholder = "../images/imagePlaceholder.png";
+        const imageUrl = listing.media?.[0]?.url || imagePlaceholder;
+        const imageAlt = listing.media?.[0]?.alt || "Listing image";
+
+        const description = listing.description || "No description available.";
+        const bidCount = listing._count?.bids || 0;
+        const highestBid = bidCount > 0
+            ? Math.max(...listing.bids.map(bid => bid.amount))
+            : 0;
+
+        card.innerHTML = `
+            <img class="card-image" src="${imageUrl}" alt="${imageAlt}" onerror="this.onerror=null;this.src='${imagePlaceholder}'"/>
+            <h2 class="card-title">${listing.title}</h2>
+            <p class="card-text">Bids: ${bidCount}</p>
+            <p class="card-text">Highest bid: $${highestBid}</p>
+            <p class="card-text">Ends at: ${new Date(listing.endsAt).toLocaleDateString()}</p>
+            <p class="card-text">${description}</p>
+        `;
+
+        const historyBtn = document.createElement("button");
+        historyBtn.textContent = "Show Bidding History";
+        historyBtn.className = "btn btn-secondary-custom";
+
+        let historyVisible = false;
+        let historyContainer;
+
+        historyBtn.addEventListener("click", async () => {
+            historyVisible = !historyVisible;
+
+            if (historyVisible) {
+                historyBtn.textContent = "Hide Bidding History";
+
+                if (!historyContainer) {
+                    historyContainer = document.createElement("div");
+                    historyContainer.classList.add("mt-3");
+                    card.appendChild(historyContainer);
+
+                    await biddingHistory(listing.id, historyContainer);
+                } else {
+                    historyContainer.style.display = "block";
+                }
+            } else {
+                historyBtn.textContent = "Show Bidding History";
+                if (historyContainer) historyContainer.style.display = "none";
+            }
+        });
+
+        card.appendChild(historyBtn);
+        col.appendChild(card);
+        listingContainer.appendChild(col);
+
+        if (bidForm) {
+            bidForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                bidMessage.textContent = "";
+                
+                if (!token) {
+                    bidMessage.textContent = "You must be logged in to place a bid.";
+                    return;
+                }
+
+                const bidAmount = parseFloat(document.getElementById("bidAmount").value);
+                if (bidAmount <= highestBid) {
+                    bidMessage.textContent = `Your bid must be higher than the current highest bid of $${highestBid}.`;
+                    console.error(`Bid of $${bidAmount} rejected — below highest bid of $${highestBid}.`);
+                    return;
+                }
+
+                showLoader();
+                try {
+                    const bidResponse = await fetch(`${API_BASE_URL}/${listingId}/bids`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`,
+                            "X-Noroff-API-Key": API_KEY
+                        },
+                        body: JSON.stringify({ amount: bidAmount })
+                    });
+
+                    if (!bidResponse.ok) {
+                        const errorData = await bidResponse.json();
+                        throw new Error(errorData.errors?.[0].message || "Failed to place bid");
+                    }
+
+                    bidMessage.textContent = "Bid placed successfully!";
+                    bidForm.reset();
+                    fetchSingleListing();
+
+                } catch (err) {
+                    bidMessage.textContent = `Error: ${err.message}`;
+                } finally {
+                    hideLoader();
                 }
             });
-            if (!response.ok) throw new Error("Failed to fetch listing");
-
-            const { data } = await response.json();
-            currentListing = data;
-
-            const imageUrl = data.media?.[0]?.url || "../images/imagePlaceholder.png";
-            const imageAlt = data.media?.[0]?.alt || "Listing image";
-        
-            const highestBid = data.bids && data.bids.length > 0 
-                ? Math.max(...data.bids.map(bid => bid.amount)) 
-                : 0;
-
-            listingContainer.innerHTML = `
-                <h2>${data.title}</h2>
-                <p>${data.description || "No description"}</p>
-                <img src="${imageUrl}" alt="${imageAlt}" class="img-fluid mb-3">
-                <p>Current highest bid: $${highestBid}</p>
-                <p>Ends at: ${new Date(data.endsAt).toLocaleString()}</p>
-            `;
-        } catch (error) {
-            listingContainer.innerHTML = `<p class="text-danger">${error.message}</p>`;
-        } finally {
-            hideLoader();
         }
+
+    } catch (error) {
+        listingContainer.innerHTML = `<p class="text-danger">${error.message}</p>`;
+    } finally {
+        hideLoader();
     }
+}
 
-    bidForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
+async function biddingHistory(listingId, container) {
+    const token = localStorage.getItem("token");
 
-        if (!currentListing) return;
+    showLoader();
+    try {
+        const response = await fetch(`${API_BASE_URL}/${listingId}?_bids=true`, {
+            headers: {
+                "Content-Type": "application/json",
+                ...(token && { "Authorization": `Bearer ${token}` }),
+            },
+        });
 
-        if (new Date(currentListing.endsAt) < new Date()) {
-            bidMessage.innerHTML = `<p class="text-danger">This listing has ended. You cannot place a bid.</p>`;
+        if (!response.ok) throw new Error("Failed to fetch bidding history");
+
+        const { data: listing } = await response.json();
+        const bids = listing.bids || [];
+
+        if (bids.length === 0) {
+            container.innerHTML = "<p>No bids have been placed on this listing yet.</p>";
             return;
         }
 
-        const token = localStorage.getItem("token");
-        if (!token) {
-            bidMessage.innerHTML = `<p class="text-danger">You must be logged in to place a bid.</p>`;
-            return;
-        }
+        const list = document.createElement("ul");
+        list.classList.add("list-group");
 
-        const bidAmount = parseFloat(document.getElementById("bidAmount").value);
-        if (isNaN(bidAmount) || bidAmount <= 0) {
-            bidMessage.innerHTML = `<p class="text-danger">Enter a valid bid amount.</p>`;
-            return;
-        }
-
-        const highestBid = currentListing.bids && currentListing.bids.length > 0 
-            ? Math.max(...currentListing.bids.map(bid => bid.amount)) 
-            : 0;
-            
-        if (bidAmount <= highestBid) {
-            bidMessage.innerHTML = `<p class="text-danger">Your bid must be higher than the current highest bid ($${highestBid}).</p>`;
-            return;
-        }
-
-        showLoader();
-        try {
-            const response = await fetch(`https://v2.api.noroff.dev/auction/listings/${listingId}/bids`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`,
-                    "X-Noroff-API-Key": API_KEY
-                },
-                body: JSON.stringify({ amount: bidAmount })
+        bids
+            .sort((a, b) => new Date(b.created) - new Date(a.created))
+            .forEach(bid => {
+                const item = document.createElement("li");
+                item.classList.add("list-group-item");
+                item.textContent = `User: ${bid.bidder?.name || "Unknown"} — $${bid.amount} (${new Date(bid.created).toLocaleString()})`;
+                list.appendChild(item);
             });
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || "Failed to place bid");
-            }
+        container.innerHTML = "<h4>Bidding History</h4>";
+        container.appendChild(list);
 
-            bidMessage.innerHTML = `<p class="text-success">Bid of $${bidAmount} placed successfully!</p>`;
-            bidForm.reset();
-            fetchListing();
-        } catch (error) {
-            bidMessage.innerHTML = `<p class="text-danger">${error.message}</p>`;
-        } finally {
-            hideLoader();
-        }
-    });
-
-    fetchListing();
+    } catch (error) {
+        console.error("Error fetching bidding history:", error);
+        container.innerHTML = `<p class="text-danger">Error: ${error.message}</p>`;
+    } finally {
+        hideLoader();
+    }
 }
