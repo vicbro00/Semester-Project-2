@@ -66,30 +66,20 @@ export async function displayListings(listings) {
             ? "/Semester-Project-2/images/imagePlaceholder.png"
             : "../images/imagePlaceholder.png";
 
-        const imageUrl = isValidUrl(listing.media?.[0]?.url) ? listing.media[0].url : imagePlaceholder;
-        const imageAlt = listing.media?.[0]?.alt || "Listing image";
-
         card.innerHTML = `
-            <img class="card-image" src="${imageUrl}" alt="${imageAlt}" onerror="this.onerror=null;this.src='${imagePlaceholder}'"/>
+            <div class="card-images">
+                ${listing.media?.map(img => `
+                    <img class="card-image-thumb" src="${img.url}" alt="${img.alt || 'Listing image'}"
+                        onerror="this.onerror=null;this.src='${imagePlaceholder}'"/>
+                `).join("") || `<img class="card-image-thumb" src="${imagePlaceholder}" alt="Placeholder"/>`}
+            </div>
             <h2 class="card-title">${listing.title}</h2>
             <p class="card-text">Ends at: ${new Date(listing.endsAt).toLocaleDateString()}</p>
-            <button id="makeBidBtn" class="btn-primary-custom" onclick="location.href='/Semester-Project-2/listings/single-listing.html?id=${listing.id}'">More info</button>
+            <button class="btn-primary-custom" onclick="location.href='/Semester-Project-2/listings/single-listing.html?id=${listing.id}'">More info</button>
         `;
         col.appendChild(card);
         container.appendChild(col);
     });
-
-    // Function to validate the image URLs
-    function isValidUrl(url) {
-        if (!url) return false;
-        try {
-            new URL(url);
-            if (url.includes("uhdwallpapers.org") || url.includes("i.imgur.com")) return false;
-            return true;
-        } catch {
-            return false;
-        }
-    }
 }
 
 /**
@@ -131,8 +121,6 @@ export async function getListing() {
         const imagePlaceholder = window.location.pathname.includes("index.html") || window.location.pathname === "/Semester-Project-2/"
             ? "/Semester-Project-2/images/imagePlaceholder.png"
             : "../images/imagePlaceholder.png";
-        const imageUrl = listing.media?.[0]?.url || imagePlaceholder;
-        const imageAlt = listing.media?.[0]?.alt || "Listing image";
 
         const description = listing.description || "No description available.";
         const bidCount = listing._count?.bids || 0;
@@ -145,7 +133,12 @@ export async function getListing() {
             : "";
 
         card.innerHTML = `
-            <img class="card-image" src="${imageUrl}" alt="${imageAlt}" onerror="this.onerror=null;this.src='${imagePlaceholder}'"/>
+            <div class="card-images">
+                ${listing.media?.map(img => `
+                    <img class="card-image-thumb" src="${img.url}" alt="${img.alt || 'Listing image'}"
+                        onerror="this.onerror=null;this.src='${imagePlaceholder}'"/>
+                `).join("") || `<img class="card-image-thumb" src="${imagePlaceholder}" alt="Placeholder"/>`}
+            </div>
             <h2 class="card-title">${listing.title}</h2>
             <p class="card-text">Bids: ${bidCount}</p>
             <p class="card-text">Highest bid: $${highestBid}</p>

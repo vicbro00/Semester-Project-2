@@ -47,8 +47,6 @@ export async function fetchSingleListing() {
         card.dataset.created = listing.created;
 
         const imagePlaceholder = "../images/imagePlaceholder.png";
-        const imageUrl = listing.media?.[0]?.url || imagePlaceholder;
-        const imageAlt = listing.media?.[0]?.alt || "Listing image";
 
         const description = listing.description || "No description available.";
         const bidCount = listing._count?.bids || 0;
@@ -57,7 +55,12 @@ export async function fetchSingleListing() {
             : 0;
 
         card.innerHTML = `
-            <img class="card-image" src="${imageUrl}" alt="${imageAlt}" onerror="this.onerror=null;this.src='${imagePlaceholder}'"/>
+            <div class="card-images">
+                ${listing.media?.map(img => `
+                    <img class="card-image-thumb" src="${img.url}" alt="${img.alt || 'Listing image'}"
+                        onerror="this.onerror=null;this.src='${imagePlaceholder}'"/>
+                `).join("") || `<img class="card-image-thumb" src="${imagePlaceholder}" alt="Placeholder"/>`}
+            </div>
             <h2 class="card-title">${listing.title}</h2>
             <p class="card-text">Bids: ${bidCount}</p>
             <p class="card-text">Highest bid: $${highestBid}</p>

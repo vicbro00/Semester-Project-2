@@ -260,13 +260,15 @@ export async function showBiddedListings() {
                     `;
                 }
 
-                const imageUrl = bid.listing.media?.[0]?.url || "/Semester-Project-2/images/imagePlaceholder.png";
-                const imageAlt = bid.listing.media?.[0]?.alt || "Listing image";
-
                 return `
                     <div class="col-12 col-md-6">
                         <div class="card h-100 mb-3">
-                            <img src="${imageUrl}" alt="${imageAlt}" class="card-image">
+                            <div class="card-images">
+                                ${listing.media?.map(img => `
+                                    <img class="card-image-thumb" src="${img.url}" alt="${img.alt || 'Listing image'}"
+                                        onerror="this.onerror=null;this.src='${imagePlaceholder}'"/>
+                                `).join("") || `<img class="card-image-thumb" src="${imagePlaceholder}" alt="Placeholder"/>`}
+                            </div>
                             <div class="card-body">
                                 <h5 class="card-title">${bid.listing.title}</h5>
                                 <p class="card-text">${bid.listing.description || "No description"}</p>
