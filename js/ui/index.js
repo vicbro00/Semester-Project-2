@@ -1,4 +1,4 @@
-import { displayListings } from "../api/listings.js";
+import { displayListings, fetchListingsOnce } from "../api/listings.js";
 import { API_BASE_URL, options } from "../api/api.js";
 import { showLoader, hideLoader } from "./loader.js";
 
@@ -53,9 +53,19 @@ export async function fetchListings(page = 1, searchTerm = "") {
  */
 export async function setupSearch() {
     if (!searchInput) return;
-    searchInput.addEventListener("input", () => {
-        currentSearchTerm = searchInput.value.trim();
-        fetchListings(1, currentSearchTerm);
+    searchInput.addEventListener("input", async () => {
+        const term = searchInput.value.trim().toLowerCase();
+        currentSearchTerm = term;
+
+        const allListings = await fetchListingsOnce();
+        const filtered = allListings.filter(listing => {
+            return (listing.title?.toLowerCase().includes(term) ||
+                    listing.description?.toLowerCase().includes(term) ||
+                    listing.tags?.join(" ").toLowerCase().includes(term) ||
+                    listing.keywords?.join(" ").toLowerCase().includes(term));
+        });
+
+        displayListings(filtered);
     });
 }
 
