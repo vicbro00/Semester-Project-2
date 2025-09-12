@@ -7,6 +7,7 @@ import { showLoader, hideLoader } from "./loader.js";
  */
 export async function fetchSingleListing() {
     const token = localStorage.getItem("token");
+    const username = localStorage.getItem("username");
     const listingContainer = document.getElementById("listingContainer");
     const bidForm = document.getElementById("bidForm");
     const bidMessage = document.getElementById("bidMessage");
@@ -33,6 +34,8 @@ export async function fetchSingleListing() {
 
         const { data: listing } = await response.json();
         if (!listing) throw new Error(`No data returned for listing with ID ${listingId}`);
+
+        const isOwner = listing.seller?.username === username;
 
         listingContainer.innerHTML = "";
 
@@ -138,6 +141,10 @@ export async function fetchSingleListing() {
                     hideLoader();
                 }
             });
+        }
+        if (isOwner && bidForm) {
+            bidForm.style.display = "none";
+            bidMessage.textContent = "You cannot bid on your own listing.";
         }
 
     } catch (error) {
