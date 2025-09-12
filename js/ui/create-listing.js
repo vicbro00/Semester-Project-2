@@ -23,30 +23,39 @@ export function createListing() {
 
         const title = document.getElementById("title").value.trim();
         const description = document.getElementById("description").value.trim();
-        const image = document.getElementById("image").value.trim();
+        const imagesInput = document.getElementById("images").value.trim();
         const endsAt = document.getElementById("endDate").value;
 
-        if (!title || !image || !endsAt) {
+        if (!title || !imagesInput || !endsAt) {
             message.innerHTML = `<p class="text-danger">Please fill in all required fields.</p>`;
             return;
         }
 
-        try {
-            new URL(image);
-        } catch {
-            message.innerHTML = `<p class="text-danger">Invalid image URL. Please provide a valid URL.</p>`;
-            return;
+        const urls = imagesInput
+            .split(/[\n,]+/)
+            .map(url => url.trim())
+            .filter(url => url.length > 0);
+
+        const media = [];
+        for (const url of urls) {
+            try {
+                new URL(url); // throws if invalid
+                media.push({ url, alt: title });
+            } catch {
+                message.innerHTML = `<p class="text-danger">Invalid image URL: ${url}</p>`;
+                return;
+            }
         }
 
         const listingData = {
             title,
             description,
-            media: [{ url: image, alt: title }],
+            media,
             endsAt: new Date(endsAt).toISOString()
         };
 
-        showLoader();
         try {
+            showLoader();
             const response = await fetch("https://v2.api.noroff.dev/auction/listings", {
                 method: "POST",
                 headers: {
