@@ -74,7 +74,7 @@ export async function setupSearch() {
  * @param {*} sortListings 
  * @returns 
  */
-export async function filterDropdown(sortListings) {
+export function filterDropdown(allListings, displayFn) {
     const filterBtn = document.getElementById("filterBtn");
     const filterDropdown = document.getElementById("filterDropdown");
 
@@ -97,12 +97,21 @@ export async function filterDropdown(sortListings) {
     filterDropdown.addEventListener("click", (e) => {
         const item = e.target.closest(".list-group-item");
         if (item) {
-            const sortOrder = item.dataset.sort;
-            try {
-                sortListings(sortOrder);
-            } catch (error) {
-                console.error("Error sorting listings:", error, "Sort order:", sortOrder);
-            }
+            const filterType = item.dataset.filterType;
+            const filterValue = item.dataset.filterValue;
+
+            if (!filterType || !filterValue) return;
+
+            const filtered = allListings.filter(listing => {
+                if (filterType === "category") {
+                    return listing.category?.toLowerCase() === filterValue.toLowerCase();
+                } else if (filterType === "tag") {
+                    return listing.tags?.some(tag => tag.toLowerCase() === filterValue.toLowerCase());
+                }
+                return false;
+            });
+
+            displayFn(filtered);
             filterDropdown.classList.add("d-none");
         }
     });
