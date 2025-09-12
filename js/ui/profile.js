@@ -246,6 +246,8 @@ export async function showBiddedListings() {
             return;
         }
 
+        const imagePlaceholder = "/Semester-Project-2/images/imagePlaceholder.png";
+
         container.innerHTML = `
             <h3 class="mt-4">Listings I Have Bid On</h3>
             ${bids.map(bid => {
@@ -265,8 +267,9 @@ export async function showBiddedListings() {
                         <div class="card h-100 mb-3">
                             <div class="card-carousel">
                                 <button class="carousel-btn left-btn">&lt;</button>
-                                <img class="carousel-image" src="${listing.media?.[0]?.url || imagePlaceholder}" 
-                                    alt="${listing.media?.[0]?.alt || 'Listing image'}" onerror="this.onerror=null;this.src='${imagePlaceholder}'"/>
+                                <img class="carousel-image" src="${bid.listing.media?.[0]?.url || imagePlaceholder}" 
+                                    alt="${bid.listing.media?.[0]?.alt || 'Listing image'}" 
+                                    onerror="this.onerror=null;this.src='${imagePlaceholder}'"/>
                                 <button class="carousel-btn right-btn">&gt;</button>
                             </div>
                             <div class="card-body">
