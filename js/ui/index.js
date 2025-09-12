@@ -7,8 +7,8 @@ let currentSearchTerm = "";
 let lastPage = 1;
 const listingsPerPage = 100;
 const pageIndicator = document.getElementById("pageIndicator");
-const prevBtn = document.getElementById("prevPage");
-const nextBtn = document.getElementById("nextPage");
+export const prevBtn = document.getElementById("prevPage");
+export const nextBtn = document.getElementById("nextPage");
 const searchInput = document.getElementById("searchInput");
 
 /**

@@ -1,6 +1,6 @@
 import { updateMenus, setupLogout } from "./js/ui/nav.js";
 import { getListing, sortListings } from "./js/api/listings.js";
-import { filterDropdown, setupSearch, fetchListings } from "./js/ui/index.js";
+import { filterDropdown, setupSearch, fetchListings, nextBtn, prevBtn } from "./js/ui/index.js";
 import { registerUser } from "./js/ui/register.js";
 import { loginUser } from "./js/ui/login.js";
 import { fetchProfile, createButton, editProfileButton, showListings, showBiddedListings } from "./js/ui/profile.js";
