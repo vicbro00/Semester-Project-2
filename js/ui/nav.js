@@ -22,14 +22,14 @@ export async function updateMenus() {
 
     const linksLoggedIn = [
         { href: "index.html", text: "Home" },
-        { href: "../profile/profile.html", text: "Profile" },
+        { href: "profile/profile.html", text: "Profile" },
         { href: "#", id: "logout", text: "Logout" }
     ];
 
     const linksLoggedOut = [
         { href: "index.html", text: "Home" },
-        { href: "../profile/login.html", text: "Login" },
-        { href: "../profile/register.html", text: "Register" }
+        { href: "profile/login.html", text: "Login" },
+        { href: "profile/register.html", text: "Register" }
     ];
 
     const menuLinks = loggedIn ? linksLoggedIn : linksLoggedOut;
