@@ -105,7 +105,7 @@ export async function getListing() {
         return;
     }
 
-    const token = localStorage.getItem("token"); // check if user is logged in
+    const token = localStorage.getItem("token");
 
     showLoader();
     try {

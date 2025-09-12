@@ -25,7 +25,11 @@ export async function searchListings() {
             return;
         }
 
-        const response = await fetch(API_BASE_URL, options());
+        const response = await fetch(
+            `${API_BASE_URL}?q=${encodeURIComponent(searchInput)}&_bids=true&sort=created&sortOrder=desc`,
+            options()
+        );
+
         if (!response.ok) {
             console.error("Failed to fetch listings for search", response.status, response.statusText);
             throw new Error("Failed to fetch listings");
