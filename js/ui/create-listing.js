@@ -1,6 +1,11 @@
 import { API_KEY } from "../api/api.js";
 import { showLoader, hideLoader } from "./loader.js";
 
+/**
+ * Creates a new listing.
+ * Handles form submission, validation, and API interaction.
+ * @returns {void} updates the DOM with success or error messages
+ */
 export function createListing() {
     const form = document.getElementById("createListingForm");
     const message = document.getElementById("message");
@@ -23,6 +28,13 @@ export function createListing() {
 
         if (!title || !image || !endsAt) {
             message.innerHTML = `<p class="text-danger">Please fill in all required fields.</p>`;
+            return;
+        }
+
+        try {
+            new URL(image);
+        } catch {
+            message.innerHTML = `<p class="text-danger">Invalid image URL. Please provide a valid URL.</p>`;
             return;
         }
 

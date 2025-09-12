@@ -4,6 +4,10 @@ import { updateMenus } from "./nav.js";
 
 const loginURL = "https://v2.api.noroff.dev/auth/login";
 
+/**
+ * Logs in the user
+ * @returns {void} handles user login, form submission, validation, and API interaction
+ */
 export function loginUser() {
     const form = document.querySelector("#loginForm");
     const emailInput = document.querySelector("#email");

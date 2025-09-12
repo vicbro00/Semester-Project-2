@@ -5,6 +5,10 @@ const username = localStorage.getItem("username");
 const updateProfileURL = `https://v2.api.noroff.dev/auction/profiles/${username}`;
 const form = document.querySelector("#updateProfileForm");
 
+/**
+ * the users profile forms are populated with current data
+ * @returns {Promise<void>} populates the profile form with current user data
+ */
 export async function populateProfileForm() {
     if (!form) return;
 
@@ -41,6 +45,10 @@ export async function populateProfileForm() {
     }
 }
 
+/**
+ * updates the user's profile information
+ * @returns {void} updates the user's profile information
+ */
 export async function updateProfile() {
     if (!form) return;
 

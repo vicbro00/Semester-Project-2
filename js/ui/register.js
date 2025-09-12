@@ -3,6 +3,10 @@ import { showLoader, hideLoader } from "./loader.js";
 
 const registerURL = "https://v2.api.noroff.dev/auth/register";
 
+/**
+ * registers a new user
+ * @returns {void} handles user registration, form submission, validation, and API interaction
+ */
 export function registerUser() {
     const form = document.querySelector("form");
 

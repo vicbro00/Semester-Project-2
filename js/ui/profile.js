@@ -3,6 +3,10 @@ import { showLoader, hideLoader } from "./loader.js";
 
 const main = document.querySelector("main");
 
+/**
+ * Fetches and displays the user's profile information
+ * @returns {Promise<void>} Fetches and displays the user's profile information
+ */
 export async function fetchProfile() {
     if (!main) return;
 
@@ -41,6 +45,10 @@ export async function fetchProfile() {
     }
 }
 
+/**
+ * shows the profile information in the DOM
+ * @param {*} profile 
+ */
 function showProfile(profile) {
     const profileInfo = document.getElementById("profileInfo");
 
@@ -60,6 +68,10 @@ function showProfile(profile) {
     `;
 }
 
+/**
+ * takes the user to the edit profile page
+ * @returns {void} creates and appends an "Edit Profile" button to the profile page
+ */
 export function editProfileButton() {
     const container = document.getElementById("profileEdit");
 
@@ -76,6 +88,10 @@ export function editProfileButton() {
     container.appendChild(button);
 }
 
+/**
+ * shows the user's listings when the button is clicked
+ * @returns {void} sets up the show listings button functionality
+ */
 export async function showListings() {
     const btn = document.getElementById("showListingsButton");
     const container = document.getElementById("showListings");
@@ -191,6 +207,10 @@ export async function showListings() {
     });
 }
 
+/**
+ * Fetches and displays the listings the user has bid on
+ * @returns {Promise<void>} shows the listings the user has bid on
+ */
 export async function showBiddedListings() {
     const container = document.getElementById("biddedListings");
 
@@ -265,6 +285,10 @@ export async function showBiddedListings() {
     }
 }
 
+/**
+ * takes the user to the create listing page
+ * @returns {void} creates and appends a "Create New Listing" button to the profile page
+ */
 export function createButton() {
     const container = document.getElementById("createButton");
 

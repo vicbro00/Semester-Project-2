@@ -1,6 +1,10 @@
 import { API_KEY } from "../api/api.js";
 import { showLoader, hideLoader } from "./loader.js";
 
+/**
+ * Fetches the current details of a listing for editing.
+ * @returns {void} updates the DOM with listing details and handles form submission for editing a listing
+ */
 export async function editListing() {
     const form = document.getElementById("editListingForm");
     const titleInput = document.getElementById("title");
@@ -14,6 +18,7 @@ export async function editListing() {
     const token = localStorage.getItem("token");
 
     if (!listingId || !token) {
+        console.error("Missing listing ID or token:", { listingId, token });
         alert("Missing listing ID or not logged in.");
         return;
     }
@@ -28,7 +33,10 @@ export async function editListing() {
             },
         });
 
-        if (!response.ok) throw new Error("Failed to fetch listing");
+        if (!response.ok) {
+            console.error("Failed to fetch listing. Status:", response.status, response.statusText);
+            throw new Error("Failed to fetch listing");
+        }
 
         const { data } = await response.json();
 
@@ -64,7 +72,11 @@ export async function editListing() {
                 body: JSON.stringify(updatedListing),
             });
 
-            if (!response.ok) throw new Error("Failed to update listing");
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error("Failed to update listing. Status:", response.status, response.statusText, "Response:", errorText);
+                throw new Error("Failed to update listing");
+            }
 
             alert("Listing updated successfully!");
             window.location.href = `/profile/profile.html`;

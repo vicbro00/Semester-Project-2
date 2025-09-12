@@ -10,6 +10,10 @@ const pageIndicator = document.getElementById("pageIndicator");
 const prevBtn = document.getElementById("prevPage");
 const nextBtn = document.getElementById("nextPage");
 
+/**
+ * Searches listings based on user input in the search field
+ * @returns {void} Filters listings based on search input and updates the DOM
+ */
 export async function searchListings() {
     showLoader();
     try {
@@ -22,7 +26,10 @@ export async function searchListings() {
         }
 
         const response = await fetch(API_BASE_URL, options());
-        if (!response.ok) throw new Error("Failed to fetch listings");
+        if (!response.ok) {
+            console.error("Failed to fetch listings for search", response.status, response.statusText);
+            throw new Error("Failed to fetch listings");
+        }
 
         const data = await response.json();
         let filtered = data.data || [];
@@ -53,12 +60,19 @@ export async function searchListings() {
 
 window.searchListings = searchListings;
 
-// Function to show the dropdown filter list
+/**
+ * filterDropdown sets up the filter dropdown functionality
+ * @param {*} sortListings 
+ * @returns 
+ */
 export function filterDropdown(sortListings) {
     const filterBtn = document.getElementById("filterBtn");
     const filterDropdown = document.getElementById("filterDropdown");
 
-    if (!filterBtn || !filterDropdown) return;
+    if (!filterBtn || !filterDropdown) {
+        console.error("Filter button or dropdown not found");
+        return;
+    }
 
     filterBtn.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -75,12 +89,20 @@ export function filterDropdown(sortListings) {
         const item = e.target.closest(".list-group-item");
         if (item) {
             const sortOrder = item.dataset.sort;
-            sortListings(sortOrder);
+            try {
+                sortListings(sortOrder);
+            } catch (error) {
+                console.error("Error sorting listings:", error, "Sort order:", sortOrder);
+            }
             filterDropdown.classList.add("d-none");
         }
     });
 }
 
+/**
+ * Loads the listings for a specific page, handles pagination
+ * @param {*} page 
+ */
 async function loadPage(page) {
     showLoader();
     try {
@@ -94,9 +116,17 @@ async function loadPage(page) {
             displayListings(cachedListings.slice(start, end));
         } else {
             const response = await fetch(`${API_BASE_URL}?_bids=true&sort=created&sortOrder=desc&page=${page}&limit=${listingsPerPage}`, options());
-            if (!response.ok) throw new Error("Failed to fetch listings");
+            if (!response.ok) {
+                console.error("Failed to fetch listings for page", response.status, response.statusText, "Page:", page);
+                throw new Error("Failed to fetch listings");
+            }
 
             const data = await response.json();
+
+            if (!data || !data.data) {
+                console.error("Unexpected response structure while loading page:", data);
+                throw new Error("Invalid response structure");
+            }
 
             displayListings(data.data || []);
 
@@ -117,8 +147,16 @@ async function loadPage(page) {
 }
 
 if (prevBtn && nextBtn) {
-    prevBtn.addEventListener("click", () => currentPage > 1 && loadPage(currentPage - 1));
-    nextBtn.addEventListener("click", () => currentPage < lastPage && loadPage(currentPage + 1));
+    prevBtn.addEventListener("click", () => {
+        if (currentPage > 1) {
+            loadPage(currentPage - 1).catch(err => console.error("Failed to load previous page:", err));
+        }
+    });
+    nextBtn.addEventListener("click", () => {
+        if (currentPage < lastPage) {
+            loadPage(currentPage + 1).catch(err => console.error("Failed to load next page:", err));
+        }
+    });
 }
 
 loadPage(1);

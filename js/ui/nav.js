@@ -6,6 +6,10 @@ export function isLoggedIn() {
     return localStorage.getItem('token') !== null;
 }
 
+/**
+ * Updates navigation menus based on user authentication status
+ * @returns {Promise<void>} updates the DOM with appropriate menu items and user info
+ */
 export async function updateMenus() {
     const mobileMenuContainer = document.querySelector('#mobileMenu .offcanvas-body');
     const desktopMenuContainer = document.getElementById('desktopMenu');
@@ -75,6 +79,10 @@ export async function updateMenus() {
     }
 }
 
+/**
+ * Sets up the logout functionality for a given button ID
+ * @param {string} id - The ID of the logout button
+ */
 export function setupLogout(id = 'logout') {
     const logoutBtn = document.getElementById(id) || document.getElementById(`${id}-desktop`);
     if (logoutBtn) {

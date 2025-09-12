@@ -1,6 +1,10 @@
 import { API_KEY, API_BASE_URL } from "../api/api.js";
 import { showLoader, hideLoader } from "./loader.js";
 
+/**
+ * Fetches a single listing and displays it with the listing id
+ * @returns {void} updates the DOM with listing details
+ */
 export async function fetchSingleListing() {
     const token = localStorage.getItem("token");
     const listingContainer = document.getElementById("listingContainer");
@@ -22,9 +26,13 @@ export async function fetchSingleListing() {
                 ...(token && { "Authorization": `Bearer ${token}` })
             }
         });
-        if (!response.ok) throw new Error("Failed to fetch listing");
+
+        if (!response.ok) {
+            throw new Error(`Failed to fetch listing with ID ${listingId} (status: ${response.status})`);
+        }
 
         const { data: listing } = await response.json();
+        if (!listing) throw new Error(`No data returned for listing with ID ${listingId}`);
 
         listingContainer.innerHTML = "";
 
@@ -139,6 +147,12 @@ export async function fetchSingleListing() {
     }
 }
 
+/**
+ * Shows the bidding history for a single listing when button is clicked
+ * @param {*} listingId The ID of the listing
+ * @param {*} container The container to render the history into
+ * @returns {void} updates the DOM with bidding history
+ */
 async function biddingHistory(listingId, container) {
     const token = localStorage.getItem("token");
 
@@ -151,7 +165,9 @@ async function biddingHistory(listingId, container) {
             },
         });
 
-        if (!response.ok) throw new Error("Failed to fetch bidding history");
+        if (!response.ok) {
+            throw new Error(`Failed to fetch bidding history for listing ID ${listingId} (status: ${response.status})`);
+        }
 
         const { data: listing } = await response.json();
         const bids = listing.bids || [];
