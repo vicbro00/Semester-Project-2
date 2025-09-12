@@ -97,19 +97,3 @@ export async function filterDropdown(sortListings) {
         }
     });
 }
-
-if (path.includes("index.html")) {
-    setupSearch();
-
-    if (prevBtn && nextBtn) {
-        prevBtn.addEventListener("click", () => {
-            if (currentPage > 1) fetchListings(currentPage - 1, currentSearchTerm);
-        });
-        nextBtn.addEventListener("click", () => {
-            if (currentPage < lastPage) fetchListings(currentPage + 1, currentSearchTerm);
-        });
-    }
-
-    filterDropdown(sortListings);
-    sortListings();
-}

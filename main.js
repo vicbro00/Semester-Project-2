@@ -1,5 +1,5 @@
 import { updateMenus, setupLogout } from "./js/ui/nav.js";
-import { getListing, sortListings } from "./js/api/listings.js";
+import { getListing, sortListings, fetchListings } from "./js/api/listings.js";
 import { filterDropdown, setupSearch } from "./js/ui/index.js";
 import { registerUser } from "./js/ui/register.js";
 import { loginUser } from "./js/ui/login.js";
@@ -18,14 +18,15 @@ createButton();
 const path = window.location.pathname;
 
 if (path.includes("index.html")) {
+    fetchListings(1);
     setupSearch();
-    
+
     if (prevBtn && nextBtn) {
         prevBtn.addEventListener("click", () => {
             if (currentPage > 1) fetchListings(currentPage - 1, currentSearchTerm);
         });
         nextBtn.addEventListener("click", () => {
-            if (currentPage < lastPage) (currentPage + 1, currentSearchTerm);
+            if (currentPage < lastPage) fetchListings(currentPage + 1, currentSearchTerm);
         });
     }
 
