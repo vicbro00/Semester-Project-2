@@ -65,7 +65,7 @@ window.searchListings = searchListings;
  * @param {*} sortListings 
  * @returns 
  */
-export function filterDropdown(sortListings) {
+export async function filterDropdown(sortListings) {
     const filterBtn = document.getElementById("filterBtn");
     const filterDropdown = document.getElementById("filterDropdown");
 

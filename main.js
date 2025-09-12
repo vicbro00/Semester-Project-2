@@ -13,8 +13,6 @@ import { editListing } from "./js/ui/edit-listing.js";
 setupLogout();
 
 updateMenus();
-sortListings();
-filterDropdown(sortListings);
 
 createButton();
 
@@ -23,6 +21,8 @@ const path = window.location.pathname;
 if (path.includes("index.html")) {
     searchListings();
     fetchListingsOnce();
+    filterDropdown(sortListings);
+    sortListings();
 }
 if (path.includes("single-listing.html")) {
     getListing();
