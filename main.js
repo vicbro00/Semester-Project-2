@@ -1,6 +1,6 @@
 import { updateMenus, setupLogout } from "./js/ui/nav.js";
-import { fetchListingsOnce, getListing, sortListings } from "./js/api/listings.js";
-import { searchListings, filterDropdown } from "./js/ui/index.js";
+import { getListing, sortListings } from "./js/api/listings.js";
+import { filterDropdown } from "./js/ui/index.js";
 import { registerUser } from "./js/ui/register.js";
 import { loginUser } from "./js/ui/login.js";
 import { fetchProfile, createButton, editProfileButton, showListings, showBiddedListings } from "./js/ui/profile.js";
@@ -18,6 +18,18 @@ createButton();
 const path = window.location.pathname;
 
 if (path.includes("index.html")) {
+    fetchListings(1);
+    setupSearch();
+    
+    if (prevBtn && nextBtn) {
+        prevBtn.addEventListener("click", () => {
+            if (currentPage > 1) fetchListings(currentPage - 1, currentSearchTerm);
+        });
+        nextBtn.addEventListener("click", () => {
+            if (currentPage < lastPage) fetchListings(currentPage + 1, currentSearchTerm);
+        });
+    }
+
     filterDropdown(sortListings);
     sortListings();
 }
