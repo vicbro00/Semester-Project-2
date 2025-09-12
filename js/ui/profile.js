@@ -82,7 +82,7 @@ export function editProfileButton() {
     button.className = "btn btn-primary-custom btn-lg";
 
     button.addEventListener("click", () => {
-        window.location.href = "/Semester-Project-2/profile/profile.html";
+        window.location.href = "/Semester-Project-2/profile/update-profile.html";
     });
 
     container.appendChild(button);
@@ -138,7 +138,7 @@ export async function showListings() {
                 }
 
                 container.innerHTML = listings.map(listing => {
-                    const imageUrl = listing.media?.[0]?.url || "/images/imagePlaceholder.png";
+                    const imageUrl = listing.media?.[0]?.url || "/Semester-Project-2/images/imagePlaceholder.png";
                     const imageAlt = listing.media?.[0]?.alt || "Listing image";
 
                     return `
@@ -260,7 +260,7 @@ export async function showBiddedListings() {
                     `;
                 }
 
-                const imageUrl = bid.listing.media?.[0]?.url || "/images/imagePlaceholder.png";
+                const imageUrl = bid.listing.media?.[0]?.url || "/Semester-Project-2/images/imagePlaceholder.png";
                 const imageAlt = bid.listing.media?.[0]?.alt || "Listing image";
 
                 return `
