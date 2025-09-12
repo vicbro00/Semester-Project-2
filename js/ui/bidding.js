@@ -54,6 +54,10 @@ export async function fetchSingleListing() {
             ? Math.max(...listing.bids.map(bid => bid.amount))
             : 0;
 
+        const placeBidButton = token
+            ? `<button class="btn btn-primary-custom mb-2" onclick="location.href='/Semester-Project-2/listings/bidding.html?id=${listing.id}'">Place Bid</button>`
+            : "";
+
         card.innerHTML = `
             <div class="card-carousel">
                 <button class="carousel-btn left-btn">&lt;</button>
