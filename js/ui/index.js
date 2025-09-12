@@ -21,7 +21,18 @@ export async function searchListings() {
 
         if (!searchInput) {
             cachedListings = [];
-            loadPage(1);
+            const response = await fetch(`${API_BASE_URL}?_bids=true&sort=created&sortOrder=desc&page=1&limit=${listingsPerPage}`, options());
+            if (!response.ok) throw new Error("Failed to fetch listings");
+
+            const data = await response.json();
+            currentPage = data.meta?.currentPage || 1;
+            lastPage = data.meta?.pageCount || 1;
+            displayListings(data.data || []);
+
+            pageIndicator.textContent = `Page ${currentPage} of ${lastPage}`;
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = currentPage === lastPage;
+
             return;
         }
 
