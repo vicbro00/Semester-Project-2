@@ -1,11 +1,25 @@
 body {
     min-height: 100vh;
     background: linear-gradient(to bottom, #FEDE5F, #F8F4FF);
-    font-family: 'Montserrat', 'Lora', 'Open Sans';
+    font-family: var(--font-primary);
 }
 
 html {
     overflow-x: hidden;
+}
+
+:root {
+    --font-primary: 'Montserrat', 'Lora', 'Open Sans', sans-serif;
+    --font-heading1: 'Lora', 'Open Sans', 'Montserrat', serif;
+    --font-heading2: 'Open Sans', 'Lora', 'Montserrat', sans-serif;
+}
+
+h2, h3, h4, button {
+    font-family: var(--font-heading1);
+}
+
+p {
+    font-family: var(--font-heading2);
 }
 
 .row {
