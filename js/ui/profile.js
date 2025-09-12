@@ -143,7 +143,7 @@ export async function showListings() {
 
                     return `
                         <div class="col-12 col-md-6">
-                            <div class="card h-100 flex-fill mb-3">
+                            <div class="card h-100 mb-3">
                                 <img src="${imageUrl}" alt="${imageAlt}" class="card-img-top">
                                 <div class="card-body">
                                     <h5 class="card-title">${listing.title}</h5>

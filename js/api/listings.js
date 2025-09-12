@@ -62,7 +62,7 @@ export async function displayListings(listings) {
 
         card.dataset.created = listing.created;
 
-        const imagePlaceholder = "/Semester-Project-2/images/imagePlaceholder.png";
+        const imagePlaceholder = "../images/imagePlaceholder.png";
 
         const imageUrl = isValidUrl(listing.media?.[0]?.url) ? listing.media[0].url : imagePlaceholder;
         const imageAlt = listing.media?.[0]?.alt || "Listing image";
@@ -126,7 +126,7 @@ export async function getListing() {
         card.classList.add("card", "h-100", "d-flex", "flex-column", "align-items-center", "text-center");
         card.dataset.created = listing.created;
 
-        const imagePlaceholder = "/Semester-Project-2/images/imagePlaceholder.png";
+        const imagePlaceholder = "../images/imagePlaceholder.png";
         const imageUrl = listing.media?.[0]?.url || imagePlaceholder;
         const imageAlt = listing.media?.[0]?.alt || "Listing image";
 
