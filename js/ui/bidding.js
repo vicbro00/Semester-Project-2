@@ -66,6 +66,7 @@ export async function fetchSingleListing() {
             <p class="card-text">Highest bid: $${highestBid}</p>
             <p class="card-text">Ends at: ${new Date(listing.endsAt).toLocaleDateString()}</p>
             <p class="card-text">${description}</p>
+            ${placeBidButton}
         `;
 
         const historyBtn = document.createElement("button");
