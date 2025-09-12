@@ -38,16 +38,14 @@ export function setupLogout() {
 
 export async function accountInfo() {
     const navbarContainer = document.getElementById("accountInfoNavbar");
-    const offcanvasContainer = document.getElementById("accountInfo");
 
-    if (!navbarContainer && !offcanvasContainer) return;
+    if (!navbarContainer) return;
 
     const token = localStorage.getItem("token");
     const username = localStorage.getItem("username");
 
     if (!token || !username) {
-        if (navbarContainer) navbarContainer.innerHTML = "";
-        if (offcanvasContainer) offcanvasContainer.innerHTML = "";
+        navbarContainer.innerHTML = "";
         return;
     }
 
@@ -65,18 +63,26 @@ export async function accountInfo() {
 
         if (!response.ok) throw new Error("Failed to fetch profile");
 
-        const data = await response.json();
+        const { data } = await response.json();
+
+        const avatarUrl = data.avatar?.url || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+        const avatarAlt = data.avatar?.alt || `${username}'s profile picture`;
+
         const content = `
-            <button class="btn btn-sm btn-warning mb-1">Your bids</button>
-            <span class="nav-text">Account Credit: $${data.data.credits}</span>
+            <div class="d-flex flex-column align-items-center">
+                <a href="/profile/profile.html">
+                    <img src="${avatarUrl}" alt="${avatarAlt}" 
+                        class="rounded-circle mb-1" 
+                        style="width: 40px; height: 40px; object-fit: cover;">
+                </a>
+                <span class="nav-text">Account Credit: $${data.credits}</span>
+            </div>
         `;
 
-        if (navbarContainer) navbarContainer.innerHTML = content;
-        if (offcanvasContainer) offcanvasContainer.innerHTML = content;
+        navbarContainer.innerHTML = content;
 
     } catch (error) {
         console.error("Error fetching account info:", error);
-        if (navbarContainer) navbarContainer.innerHTML = "";
-        if (offcanvasContainer) offcanvasContainer.innerHTML = "";
+        navbarContainer.innerHTML = "";
     }
 }
