@@ -36,6 +36,10 @@ export async function fetchSingleListing() {
         if (!listing) throw new Error(`No data returned for listing with ID ${listingId}`);
 
         const isOwner = listing.seller?.username === username;
+        const bidCount = listing._count?.bids || 0;
+        const highestBid = bidCount > 0
+            ? Math.max(...listing.bids.map(bid => bid.amount))
+            : 0;
 
         listingContainer.innerHTML = "";
 
@@ -51,10 +55,6 @@ export async function fetchSingleListing() {
         const imageAlt = listing.media?.[0]?.alt || "Listing image";
 
         const description = listing.description || "No description available.";
-        const bidCount = listing._count?.bids || 0;
-        const highestBid = bidCount > 0
-            ? Math.max(...listing.bids.map(bid => bid.amount))
-            : 0;
 
         card.innerHTML = `
             <img class="card-image" src="${imageUrl}" alt="${imageAlt}" onerror="this.onerror=null;this.src='${imagePlaceholder}'"/>
@@ -68,21 +68,17 @@ export async function fetchSingleListing() {
         const historyBtn = document.createElement("button");
         historyBtn.textContent = "Show Bidding History";
         historyBtn.className = "btn btn-secondary-custom";
-
         let historyVisible = false;
         let historyContainer;
 
         historyBtn.addEventListener("click", async () => {
             historyVisible = !historyVisible;
-
             if (historyVisible) {
                 historyBtn.textContent = "Hide Bidding History";
-
                 if (!historyContainer) {
                     historyContainer = document.createElement("div");
                     historyContainer.classList.add("mt-3");
                     card.appendChild(historyContainer);
-
                     await biddingHistory(listing.id, historyContainer);
                 } else {
                     historyContainer.style.display = "block";
@@ -98,53 +94,54 @@ export async function fetchSingleListing() {
         listingContainer.appendChild(col);
 
         if (bidForm) {
-            bidForm.addEventListener("submit", async (e) => {
-                e.preventDefault();
-                bidMessage.textContent = "";
-                
-                if (!token) {
-                    bidMessage.textContent = "You must be logged in to place a bid.";
-                    return;
-                }
+            bidForm.replaceWith(bidForm.cloneNode(true));
+            const newBidForm = document.getElementById("bidForm");
 
-                const bidAmount = parseFloat(document.getElementById("bidAmount").value);
-                if (bidAmount <= highestBid) {
-                    bidMessage.textContent = `Your bid must be higher than the current highest bid of $${highestBid}.`;
-                    console.error(`Bid of $${bidAmount} rejected — below highest bid of $${highestBid}.`);
-                    return;
-                }
+            if (!token) {
+                newBidForm.style.display = "none";
+                bidMessage.textContent = "You must be logged in to place a bid.";
+            } else if (isOwner) {
+                newBidForm.style.display = "none";
+                bidMessage.textContent = "You cannot bid on your own listing.";
+            } else {
+                newBidForm.style.display = "block";
+                newBidForm.addEventListener("submit", async (e) => {
+                    e.preventDefault();
+                    bidMessage.textContent = "";
 
-                showLoader();
-                try {
-                    const bidResponse = await fetch(`${API_BASE_URL}/${listingId}/bids`, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": `Bearer ${token}`,
-                            "X-Noroff-API-Key": API_KEY
-                        },
-                        body: JSON.stringify({ amount: bidAmount })
-                    });
-
-                    if (!bidResponse.ok) {
-                        const errorData = await bidResponse.json();
-                        throw new Error(errorData.errors?.[0].message || "Failed to place bid");
+                    const bidAmount = parseFloat(document.getElementById("bidAmount").value);
+                    if (bidAmount <= highestBid) {
+                        bidMessage.textContent = `Your bid must be higher than the current highest bid of $${highestBid}.`;
+                        return;
                     }
 
-                    bidMessage.textContent = "Bid placed successfully!";
-                    bidForm.reset();
-                    fetchSingleListing();
+                    showLoader();
+                    try {
+                        const bidResponse = await fetch(`${API_BASE_URL}/${listingId}/bids`, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Authorization": `Bearer ${token}`,
+                                "X-Noroff-API-Key": API_KEY
+                            },
+                            body: JSON.stringify({ amount: bidAmount })
+                        });
 
-                } catch (err) {
-                    bidMessage.textContent = `Error: ${err.message}`;
-                } finally {
-                    hideLoader();
-                }
-            });
-        }
-        if (isOwner && bidForm) {
-            bidForm.style.display = "none";
-            bidMessage.textContent = "You cannot bid on your own listing.";
+                        if (!bidResponse.ok) {
+                            const errorData = await bidResponse.json();
+                            throw new Error(errorData.errors?.[0].message || "Failed to place bid");
+                        }
+
+                        bidMessage.textContent = "Bid placed successfully!";
+                        newBidForm.reset();
+                        fetchSingleListing();
+                    } catch (err) {
+                        bidMessage.textContent = `Error: ${err.message}`;
+                    } finally {
+                        hideLoader();
+                    }
+                });
+            }
         }
 
     } catch (error) {
