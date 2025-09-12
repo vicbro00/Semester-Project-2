@@ -4,6 +4,7 @@ import { showLoader, hideLoader } from "./loader.js";
 
 let cachedListings = [];
 let currentPage = 1;
+let currentSearchTerm = "";
 let lastPage = 1;
 const listingsPerPage = 100;
 const pageIndicator = document.getElementById("pageIndicator");
@@ -17,57 +18,29 @@ const nextBtn = document.getElementById("nextPage");
 export async function searchListings() {
     showLoader();
     try {
-        const searchInput = document.getElementById("searchInput").value.toLowerCase().trim();
+        currentSearchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
 
-        if (!searchInput) {
-            cachedListings = [];
-            const response = await fetch(`${API_BASE_URL}?_bids=true&sort=created&sortOrder=desc&page=1&limit=${listingsPerPage}`, options());
-            if (!response.ok) throw new Error("Failed to fetch listings");
-
-            const data = await response.json();
-            currentPage = data.meta?.currentPage || 1;
-            lastPage = data.meta?.pageCount || 1;
-            displayListings(data.data || []);
-
-            pageIndicator.textContent = `Page ${currentPage} of ${lastPage}`;
-            prevBtn.disabled = currentPage === 1;
-            nextBtn.disabled = currentPage === lastPage;
-
-            return;
+        let url = `${API_BASE_URL}?_bids=true&sort=created&sortOrder=desc&page=${page}&limit=${listingsPerPage}`;
+        if (currentSearchTerm) {
+            url += `&q=${encodeURIComponent(currentSearchTerm)}`;
         }
 
-        const response = await fetch(
-            `${API_BASE_URL}?q=${encodeURIComponent(searchInput)}&_bids=true&sort=created&sortOrder=desc`,
-            options()
-        );
-
-        if (!response.ok) {
-            console.error("Failed to fetch listings for search", response.status, response.statusText);
-            throw new Error("Failed to fetch listings");
-        }
+        const response = await fetch(url, options());
+        if (!response.ok) throw new Error("Failed to fetch listings");
 
         const data = await response.json();
-        let filtered = data.data || [];
+        cachedListings = data.data || [];
+        currentPage = data.meta?.currentPage || page;
+        lastPage = data.meta?.pageCount || 1;
 
-        filtered = filtered.filter(listing =>
-            listing.title?.toLowerCase().trim().includes(searchInput) ||
-            listing.description?.toLowerCase().trim().includes(searchInput)
-        );
-
-        filtered.sort((a, b) => new Date(b.created) - new Date(a.created));
-
-        currentPage = 1;
-        lastPage = Math.ceil(filtered.length / listingsPerPage);
-        cachedListings = filtered;
-
-        displayListings(cachedListings.slice(0, listingsPerPage));
+        displayListings(cachedListings);
 
         pageIndicator.textContent = `Page ${currentPage} of ${lastPage}`;
-        prevBtn.disabled = true;
-        nextBtn.disabled = lastPage <= 1;
-
+        prevBtn.disabled = currentPage === 1;
+        nextBtn.disabled = currentPage === lastPage;
     } catch (error) {
-        console.error("Error searching listings:", error);
+        console.error(error);
+        displayListings([]);
     } finally {
         hideLoader();
     }
