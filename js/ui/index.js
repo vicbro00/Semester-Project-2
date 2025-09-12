@@ -18,7 +18,7 @@ const searchInput = document.getElementById("searchInput");
 /**
  * Fetch listings from API (with optional search term and page)
  */
-async function fetchListings(page = 1, searchTerm = "") {
+export async function fetchListings(page = 1, searchTerm = "") {
     showLoader();
     try {
         let url = `${API_BASE_URL}?_bids=true&sort=created&sortOrder=desc&page=${page}&limit=${listingsPerPage}`;
@@ -51,7 +51,7 @@ async function fetchListings(page = 1, searchTerm = "") {
 /**
  * Handles search input
  */
-function setupSearch() {
+export async function setupSearch() {
     if (!searchInput) return;
     searchInput.addEventListener("input", () => {
         currentSearchTerm = searchInput.value.trim();
