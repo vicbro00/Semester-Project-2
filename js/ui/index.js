@@ -18,29 +18,57 @@ const nextBtn = document.getElementById("nextPage");
 export async function searchListings() {
     showLoader();
     try {
-        currentSearchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
+        const searchInput = document.getElementById("searchInput").value.toLowerCase().trim();
 
-        let url = `${API_BASE_URL}?_bids=true&sort=created&sortOrder=desc&page=${page}&limit=${listingsPerPage}`;
-        if (currentSearchTerm) {
-            url += `&q=${encodeURIComponent(currentSearchTerm)}`;
+        if (!searchInput) {
+            cachedListings = [];
+            const response = await fetch(`${API_BASE_URL}?_bids=true&sort=created&sortOrder=desc&page=1&limit=${listingsPerPage}`, options());
+            if (!response.ok) throw new Error("Failed to fetch listings");
+
+            const data = await response.json();
+            currentPage = data.meta?.currentPage || 1;
+            lastPage = data.meta?.pageCount || 1;
+            displayListings(data.data || []);
+
+            pageIndicator.textContent = `Page ${currentPage} of ${lastPage}`;
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = currentPage === lastPage;
+
+            return;
         }
 
-        const response = await fetch(url, options());
-        if (!response.ok) throw new Error("Failed to fetch listings");
+        const response = await fetch(
+            `${API_BASE_URL}?q=${encodeURIComponent(searchInput)}&_bids=true&sort=created&sortOrder=desc`,
+            options()
+        );
+
+        if (!response.ok) {
+            console.error("Failed to fetch listings for search", response.status, response.statusText);
+            throw new Error("Failed to fetch listings");
+        }
 
         const data = await response.json();
-        cachedListings = data.data || [];
-        currentPage = data.meta?.currentPage || page;
-        lastPage = data.meta?.pageCount || 1;
+        let filtered = data.data || [];
 
-        displayListings(cachedListings);
+        filtered = filtered.filter(listing =>
+            listing.title?.toLowerCase().trim().includes(searchInput) ||
+            listing.description?.toLowerCase().trim().includes(searchInput)
+        );
+
+        filtered.sort((a, b) => new Date(b.created) - new Date(a.created));
+
+        currentPage = 1;
+        lastPage = Math.ceil(filtered.length / listingsPerPage);
+        cachedListings = filtered;
+
+        displayListings(cachedListings.slice(0, listingsPerPage));
 
         pageIndicator.textContent = `Page ${currentPage} of ${lastPage}`;
-        prevBtn.disabled = currentPage === 1;
-        nextBtn.disabled = currentPage === lastPage;
+        prevBtn.disabled = true;
+        nextBtn.disabled = lastPage <= 1;
+
     } catch (error) {
-        console.error(error);
-        displayListings([]);
+        console.error("Error searching listings:", error);
     } finally {
         hideLoader();
     }
