@@ -21,15 +21,15 @@ export async function updateMenus() {
     const username = localStorage.getItem("username");
 
     const linksLoggedIn = [
-        { href: "index.html", text: "Home" },
-        { href: "profile/profile.html", text: "Profile" },
+        { href: "/Semester-Project-2/index.html", text: "Home" },
+        { href: "/Semester-Project-2/profile/profile.html", text: "Profile" },
         { href: "#", id: "logout", text: "Logout" }
     ];
 
     const linksLoggedOut = [
-        { href: "index.html", text: "Home" },
-        { href: "profile/login.html", text: "Login" },
-        { href: "profile/register.html", text: "Register" }
+        { href: "/Semester-Project-2/index.html", text: "Home" },
+        { href: "/Semester-Project-2/profile/login.html", text: "Login" },
+        { href: "/Semester-Project-2/profile/register.html", text: "Register" }
     ];
 
     const menuLinks = loggedIn ? linksLoggedIn : linksLoggedOut;
@@ -58,7 +58,7 @@ export async function updateMenus() {
         .then(res => res.ok ? res.json() : Promise.reject("Failed to fetch profile"))
         .then(({ data }) => {
             const content = `
-                <a href="/profile/profile.html">
+                <a href="/Semester-Project-2/profile/profile.html">
                     <img src="${data.avatar?.url || "https://cdn-icons-png.flaticon.com/512/149/149071.png"}" 
                         alt="${data.avatar?.alt || username}" 
                         class="rounded-circle" 
