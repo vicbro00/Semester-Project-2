@@ -98,14 +98,18 @@ export async function filterDropdown(sortListings) {
     });
 }
 
-if (prevBtn && nextBtn) {
-    prevBtn.addEventListener("click", () => {
-        if (currentPage > 1) fetchListings(currentPage - 1, currentSearchTerm);
-    });
-    nextBtn.addEventListener("click", () => {
-        if (currentPage < lastPage) fetchListings(currentPage + 1, currentSearchTerm);
-    });
-}
+if (path.includes("index.html")) {
+    setupSearch();
 
-fetchListings(1);
-setupSearch();
+    if (prevBtn && nextBtn) {
+        prevBtn.addEventListener("click", () => {
+            if (currentPage > 1) fetchListings(currentPage - 1, currentSearchTerm);
+        });
+        nextBtn.addEventListener("click", () => {
+            if (currentPage < lastPage) fetchListings(currentPage + 1, currentSearchTerm);
+        });
+    }
+
+    filterDropdown(sortListings);
+    sortListings();
+}
