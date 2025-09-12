@@ -2,9 +2,9 @@ import { displayListings } from "../api/listings.js";
 import { API_BASE_URL, options } from "../api/api.js";
 import { showLoader, hideLoader } from "./loader.js";
 
-let currentPage = 1;
-let currentSearchTerm = "";
-let lastPage = 1;
+export let currentPage = 1;
+export let currentSearchTerm = "";
+export let lastPage = 1;
 const listingsPerPage = 100;
 const pageIndicator = document.getElementById("pageIndicator");
 export const prevBtn = document.getElementById("prevPage");

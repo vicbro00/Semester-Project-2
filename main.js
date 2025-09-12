@@ -1,6 +1,6 @@
 import { updateMenus, setupLogout } from "./js/ui/nav.js";
 import { getListing, sortListings } from "./js/api/listings.js";
-import { filterDropdown, setupSearch, fetchListings, nextBtn, prevBtn } from "./js/ui/index.js";
+import { filterDropdown, setupSearch, fetchListings, nextBtn, prevBtn, currentPage, currentSearchTerm, lastPage } from "./js/ui/index.js";
 import { registerUser } from "./js/ui/register.js";
 import { loginUser } from "./js/ui/login.js";
 import { fetchProfile, createButton, editProfileButton, showListings, showBiddedListings } from "./js/ui/profile.js";
@@ -25,6 +25,7 @@ if (path.includes("index.html")) {
         prevBtn.addEventListener("click", () => {
             if (currentPage > 1) fetchListings(currentPage - 1, currentSearchTerm);
         });
+
         nextBtn.addEventListener("click", () => {
             if (currentPage < lastPage) fetchListings(currentPage + 1, currentSearchTerm);
         });
