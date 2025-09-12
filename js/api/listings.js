@@ -52,33 +52,50 @@ export async function displayListings(listings) {
     }
 
     listings.forEach(listing => {
-        if (!listing.id) console.warn("Listing without ID found", listing);
         const col = document.createElement("div");
         col.classList.add("col-10", "col-md-6", "col-lg-4", "mb-4", "mt-4");
 
         const card = document.createElement("div");
         card.classList.add("card", "h-100", "d-flex", "flex-column", "align-items-center", "text-center");
-        card.dataset.created = listing.created;
 
-        card.dataset.created = listing.created;
-
-        const imagePlaceholder = window.location.pathname.includes("index.html") || window.location.pathname === "/Semester-Project-2/"
-            ? "/Semester-Project-2/images/imagePlaceholder.png"
-            : "../images/imagePlaceholder.png";
+        const imagePlaceholder = "/Semester-Project-2/images/imagePlaceholder.png";
 
         card.innerHTML = `
-            <div class="card-images">
-                ${listing.media?.map(img => `
-                    <img class="card-image-thumb" src="${img.url}" alt="${img.alt || 'Listing image'}"
-                        onerror="this.onerror=null;this.src='${imagePlaceholder}'"/>
-                `).join("") || `<img class="card-image-thumb" src="${imagePlaceholder}" alt="Placeholder"/>`}
+            <div class="card-carousel">
+                <button class="carousel-btn left-btn">&lt;</button>
+                <img class="carousel-image" src="${listing.media?.[0]?.url || imagePlaceholder}" 
+                    alt="${listing.media?.[0]?.alt || 'Listing image'}" onerror="this.onerror=null;this.src='${imagePlaceholder}'"/>
+                <button class="carousel-btn right-btn">&gt;</button>
             </div>
             <h2 class="card-title">${listing.title}</h2>
             <p class="card-text">Ends at: ${new Date(listing.endsAt).toLocaleDateString()}</p>
             <button class="btn-primary-custom" onclick="location.href='/Semester-Project-2/listings/single-listing.html?id=${listing.id}'">More info</button>
         `;
+
         col.appendChild(card);
         container.appendChild(col);
+
+        // Initialize carousel for this card
+        const carousel = card.querySelector(".card-carousel");
+        const imgElement = carousel.querySelector(".carousel-image");
+        const leftBtn = carousel.querySelector(".left-btn");
+        const rightBtn = carousel.querySelector(".right-btn");
+
+        let currentIndex = 0;
+
+        leftBtn.addEventListener("click", () => {
+            if (!listing.media || listing.media.length === 0) return;
+            currentIndex = (currentIndex - 1 + listing.media.length) % listing.media.length;
+            imgElement.src = listing.media[currentIndex].url;
+            imgElement.alt = listing.media[currentIndex].alt || 'Listing image';
+        });
+
+        rightBtn.addEventListener("click", () => {
+            if (!listing.media || listing.media.length === 0) return;
+            currentIndex = (currentIndex + 1) % listing.media.length;
+            imgElement.src = listing.media[currentIndex].url;
+            imgElement.alt = listing.media[currentIndex].alt || 'Listing image';
+        });
     });
 }
 
@@ -133,11 +150,11 @@ export async function getListing() {
             : "";
 
         card.innerHTML = `
-            <div class="card-images">
-                ${listing.media?.map(img => `
-                    <img class="card-image-thumb" src="${img.url}" alt="${img.alt || 'Listing image'}"
-                        onerror="this.onerror=null;this.src='${imagePlaceholder}'"/>
-                `).join("") || `<img class="card-image-thumb" src="${imagePlaceholder}" alt="Placeholder"/>`}
+            <div class="card-carousel">
+                <button class="carousel-btn left-btn">&lt;</button>
+                <img class="carousel-image" src="${listing.media?.[0]?.url || imagePlaceholder}" 
+                    alt="${listing.media?.[0]?.alt || 'Listing image'}" onerror="this.onerror=null;this.src='${imagePlaceholder}'"/>
+                <button class="carousel-btn right-btn">&gt;</button>
             </div>
             <h2 class="card-title">${listing.title}</h2>
             <p class="card-text">Bids: ${bidCount}</p>

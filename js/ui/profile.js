@@ -263,11 +263,11 @@ export async function showBiddedListings() {
                 return `
                     <div class="col-12 col-md-6">
                         <div class="card h-100 mb-3">
-                            <div class="card-images">
-                                ${listing.media?.map(img => `
-                                    <img class="card-image-thumb" src="${img.url}" alt="${img.alt || 'Listing image'}"
-                                        onerror="this.onerror=null;this.src='${imagePlaceholder}'"/>
-                                `).join("") || `<img class="card-image-thumb" src="${imagePlaceholder}" alt="Placeholder"/>`}
+                            <div class="card-carousel">
+                                <button class="carousel-btn left-btn">&lt;</button>
+                                <img class="carousel-image" src="${listing.media?.[0]?.url || imagePlaceholder}" 
+                                    alt="${listing.media?.[0]?.alt || 'Listing image'}" onerror="this.onerror=null;this.src='${imagePlaceholder}'"/>
+                                <button class="carousel-btn right-btn">&gt;</button>
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title">${bid.listing.title}</h5>

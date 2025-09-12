@@ -55,11 +55,11 @@ export async function fetchSingleListing() {
             : 0;
 
         card.innerHTML = `
-            <div class="card-images">
-                ${listing.media?.map(img => `
-                    <img class="card-image-thumb" src="${img.url}" alt="${img.alt || 'Listing image'}"
-                        onerror="this.onerror=null;this.src='${imagePlaceholder}'"/>
-                `).join("") || `<img class="card-image-thumb" src="${imagePlaceholder}" alt="Placeholder"/>`}
+            <div class="card-carousel">
+                <button class="carousel-btn left-btn">&lt;</button>
+                <img class="carousel-image" src="${listing.media?.[0]?.url || imagePlaceholder}" 
+                    alt="${listing.media?.[0]?.alt || 'Listing image'}" onerror="this.onerror=null;this.src='${imagePlaceholder}'"/>
+                <button class="carousel-btn right-btn">&gt;</button>
             </div>
             <h2 class="card-title">${listing.title}</h2>
             <p class="card-text">Bids: ${bidCount}</p>
