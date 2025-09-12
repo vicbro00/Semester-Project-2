@@ -1,4 +1,4 @@
-import { updateMobileMenu, setupLogout, accountInfo } from "./js/ui/nav.js";
+import { updateMenus, setupLogout } from "./js/ui/nav.js";
 import { fetchListingsOnce, getListing, sortListings } from "./js/api/listings.js";
 import { searchListings } from "./js/ui/index.js";
 import { filterDropdown } from "./js/ui/index.js";
@@ -10,12 +10,9 @@ import { createListing } from "./js/ui/create-listing.js";
 import { fetchSingleListing } from "./js/ui/bidding.js";
 import { editListing } from "./js/ui/edit-listing.js";
 
-updateMobileMenu();
-
 setupLogout();
 
-accountInfo();
-
+updateMenus();
 sortListings();
 filterDropdown(sortListings);
 

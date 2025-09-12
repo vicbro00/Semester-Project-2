@@ -53,17 +53,10 @@ h5 {
 .navbar {
     background-color: #9576DD;
     display: flex;
-    justify-content: center;
     align-items: center;
 }
 
-.navbar {
-    width: 100%;
-}
-
-.nav-text {
-    color: white;
-    text-align: center;
+#accountInfoNavbar {
     font-size: 0.65rem;
 }
 
@@ -78,6 +71,11 @@ button[data-bs-toggle="offcanvas"] {
 
 .offcanvas {
     background-color: #9576DD;
+}
+
+#desktopHeader,
+#mobileHeader {
+    color: #FFD7F3;
 }
 
 /* Cards */
@@ -102,10 +100,10 @@ button[data-bs-toggle="offcanvas"] {
 /* Buttons */
 .btn-primary-custom {
     background-color: #FFD700;
-    border: none;
     color: black;
     font-weight: bold;
-    border-radius: 2px;
+    border: #9576DD solid 1px;
+    border-radius: 25px;
     padding: 0.4rem 1rem;
 }
 
@@ -177,4 +175,17 @@ fieldset {
 
 .signin-link:hover {
     text-decoration: underline;
+}
+
+/* Media Queries */
+@media (min-width: 768px) {
+    #mobileHeader {
+        display: none !important;
+    }
+    #desktopHeader {
+        display: flex !important;
+    }
+    main {
+    margin: 0 4rem;
+}
 }

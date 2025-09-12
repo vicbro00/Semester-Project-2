@@ -1,6 +1,6 @@
 import { API_KEY } from "../api/api.js";
 import { showLoader, hideLoader } from "./loader.js";
-import { updateMobileMenu } from "./nav.js";
+import { updateMenus } from "./nav.js";
 
 const loginURL = "https://v2.api.noroff.dev/auth/login";
 
@@ -56,7 +56,7 @@ export function loginUser() {
             localStorage.setItem("token", token);
             localStorage.setItem("username", data.data?.name || data.name);
 
-            updateMobileMenu();
+            updateMenus();
             alert("Login successful!");
             window.location.href = "/index.html";
         } catch (error) {

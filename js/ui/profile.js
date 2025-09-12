@@ -44,16 +44,16 @@ export async function fetchProfile() {
 function showProfile(profile) {
     const profileInfo = document.getElementById("profileInfo");
 
-    profileInfo.innerHTML = `
+     profileInfo.innerHTML = `
         <div class="profile-banner mb-3" style="background-image: url('${profile.banner?.url || "/images/default-banner.jpg"}'); height: 200px; background-size: cover; background-position: center;"></div>
-        <div class="d-flex align-items-center mb-3">
-            <img src="${profile.avatar?.url || "/images/default-avatar.png"}" alt="${profile.avatar?.alt || "User Avatar"}" class="rounded-circle me-3" width="100" height="100">
-            <div>
-                <h2>${profile.name}</h2>
-                <p>${profile.bio || "No bio set."}</p>
-            </div>
+
+        <div class="text-center mb-3">
+            <img src="${profile.avatar?.url || "/images/default-avatar.png"}" alt="${profile.avatar?.alt || "User Avatar"}" class="rounded-circle mb-3" width="100" height="100">
+            <h2>${profile.name}</h2>
+            <p>${profile.bio || "No bio set."}</p>
         </div>
-        <div>
+
+        <div class="text-center">
             <p><strong>Email:</strong> ${profile.email}</p>
             <p><strong>Credits:</strong> ${profile.credits}</p>
         </div>
