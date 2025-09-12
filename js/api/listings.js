@@ -1,17 +1,24 @@
 import { showLoader, hideLoader } from "../ui/loader.js";
 import { API_BASE_URL, options } from "./api.js";
 
+let cachedListings = [];
+
 // Function to fetch listings from API
-export async function fetchListings() {
+export async function fetchListingsOnce() {
+    if (cachedListings.length) return cachedListings;
+
     showLoader();
     try {
         const response = await fetch(`${API_BASE_URL}?_bids=true&sort=created&sortOrder=desc`, options());
         if (!response.ok) throw new Error("Failed to fetch listings");
 
         const data = await response.json();
-        displayListings(Array.isArray(data.data) ? data.data : [data.data]);
+        cachedListings = data.data || [];
+        displayListings(cachedListings);
+        return cachedListings;
     } catch (error) {
         console.error(error);
+        return [];
     } finally {
         hideLoader();
     }
@@ -43,12 +50,6 @@ export async function displayListings(listings) {
 
         const imageUrl = isValidUrl(listing.media?.[0]?.url) ? listing.media[0].url : imagePlaceholder;
         const imageAlt = listing.media?.[0]?.alt || "Listing image";
-
-        const bidCount = listing.bids?.length || 0;
-
-        const highestBid = bidCount > 0
-            ? Math.max(...listing.bids.map(bid => bid.amount))
-            : 0;
 
         card.innerHTML = `
             <img class="card-image" src="${imageUrl}" alt="${imageAlt}" onerror="this.onerror=null;this.src='${imagePlaceholder}'"/>

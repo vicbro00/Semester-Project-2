@@ -92,6 +92,7 @@ button[data-bs-toggle="offcanvas"] {
     border-radius: 1px;
     border: 1px solid #9576DD;
     border-radius: 25px;
+    overflow-x: hidden;
 }
 
 .card-image {
@@ -115,6 +116,15 @@ button[data-bs-toggle="offcanvas"] {
 
 #makeBidBtn {
     margin: 2rem auto;
+}
+
+/* Pages */
+#pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem 0;
+    gap: 1rem;
 }
 
 /* Filter button */

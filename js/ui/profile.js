@@ -243,7 +243,7 @@ export async function showBiddedListings() {
 
                 return `
                     <div class="card mb-3">
-                        <img src="${imageUrl}" alt="${imageAlt}" class="card-img-top">
+                        <img src="${imageUrl}" alt="${imageAlt}" class="card-image">
                         <div class="card-body">
                             <h5 class="card-title">${bid.listing.title}</h5>
                             <p class="card-text">${bid.listing.description || "No description"}</p>

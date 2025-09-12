@@ -1,5 +1,5 @@
 import { updateMobileMenu, setupLogout, accountInfo } from "./js/ui/nav.js";
-import { fetchListings, getListing, sortListings } from "./js/api/listings.js";
+import { fetchListingsOnce, getListing, sortListings } from "./js/api/listings.js";
 import { searchListings } from "./js/ui/index.js";
 import { filterDropdown } from "./js/ui/index.js";
 import { registerUser } from "./js/ui/register.js";
@@ -16,7 +16,6 @@ setupLogout();
 
 accountInfo();
 
-fetchListings();
 sortListings();
 filterDropdown(sortListings);
 
@@ -26,7 +25,7 @@ const path = window.location.pathname;
 
 if (path.includes("index.html")) {
     searchListings();
-    fetchListings();
+    fetchListingsOnce();
 }
 if (path.includes("single-listing.html")) {
     getListing();
@@ -58,6 +57,6 @@ if (path.includes("edit-listing.html")) {
 
 window.addEventListener("pageshow", () => {
   if (window.location.pathname.includes("index.html")) {
-    fetchListings();
+    fetchListingsOnce();
   }
 });
