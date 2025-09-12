@@ -126,16 +126,18 @@ export async function showListings() {
                     const imageAlt = listing.media?.[0]?.alt || "Listing image";
 
                     return `
-                        <div class="card mb-3">
-                            <img src="${imageUrl}" alt="${imageAlt}" class="card-img-top">
-                            <div class="card-body">
-                                <h5 class="card-title">${listing.title}</h5>
-                                <p class="card-text">${listing.description || "No description"}</p>
-                                <p><strong>Tags:</strong> ${listing.tags.join(", ")}</p>
-                                <p><strong>Ends At:</strong> ${new Date(listing.endsAt).toLocaleDateString()}</p>
-                                <div class="d-flex gap-2">
-                                    <button class="btn btn-sm btn-warning edit-listing" data-id="${listing.id}">Edit</button>
-                                    <button class="btn btn-sm btn-danger delete-listing" data-id="${listing.id}">Delete</button>
+                        <div class="col-12 col-md-6 col-lg-4 d-flex">
+                            <div class="card flex-fill mb-3">
+                                <img src="${imageUrl}" alt="${imageAlt}" class="card-img-top">
+                                <div class="card-body">
+                                    <h5 class="card-title">${listing.title}</h5>
+                                    <p class="card-text">${listing.description || "No description"}</p>
+                                    <p><strong>Tags:</strong> ${listing.tags.join(", ")}</p>
+                                    <p><strong>Ends At:</strong> ${new Date(listing.endsAt).toLocaleDateString()}</p>
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-sm btn-warning edit-listing" data-id="${listing.id}">Edit</button>
+                                        <button class="btn btn-sm btn-danger delete-listing" data-id="${listing.id}">Delete</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -242,14 +244,16 @@ export async function showBiddedListings() {
                 const imageAlt = bid.listing.media?.[0]?.alt || "Listing image";
 
                 return `
-                    <div class="card mb-3">
-                        <img src="${imageUrl}" alt="${imageAlt}" class="card-image">
-                        <div class="card-body">
-                            <h5 class="card-title">${bid.listing.title}</h5>
-                            <p class="card-text">${bid.listing.description || "No description"}</p>
-                            <p><strong>Your Bid:</strong> $${bid.amount}</p>
-                            <p><strong>Ends At:</strong> ${new Date(bid.listing.endsAt).toLocaleDateString()}</p>
-                            <a href="/listings/single-listing.html?id=${bid.listing.id}" class="btn btn-sm btn-primary-custom">View Listing</a>
+                    <div class="col-12 col-md-6 col-lg-4 d-flex">
+                        <div class="card mb-3">
+                            <img src="${imageUrl}" alt="${imageAlt}" class="card-image">
+                            <div class="card-body">
+                                <h5 class="card-title">${bid.listing.title}</h5>
+                                <p class="card-text">${bid.listing.description || "No description"}</p>
+                                <p><strong>Your Bid:</strong> $${bid.amount}</p>
+                                <p><strong>Ends At:</strong> ${new Date(bid.listing.endsAt).toLocaleDateString()}</p>
+                                <a href="/listings/single-listing.html?id=${bid.listing.id}" class="btn btn-sm btn-primary-custom">View Listing</a>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -268,7 +272,7 @@ export function createButton() {
 
     const button = document.createElement("button");
     button.textContent = "Create New Listing";
-    button.className = "btn btn-primary-custom btn-lg";
+    button.className = "btn mt-4 btn-primary-custom btn-lg";
 
     button.addEventListener("click", () => {
         window.location.href = "/profile/create.html";

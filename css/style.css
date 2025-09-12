@@ -182,10 +182,12 @@ fieldset {
     #mobileHeader {
         display: none !important;
     }
+
     #desktopHeader {
         display: flex !important;
     }
+
     main {
     margin: 0 4rem;
-}
+    }
 }
