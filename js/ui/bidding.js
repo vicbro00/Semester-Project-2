@@ -36,10 +36,6 @@ export async function fetchSingleListing() {
         if (!listing) throw new Error(`No data returned for listing with ID ${listingId}`);
 
         const isOwner = listing.seller?.username === username;
-        const bidCount = listing._count?.bids || 0;
-        const highestBid = bidCount > 0
-            ? Math.max(...listing.bids.map(bid => bid.amount))
-            : 0;
 
         listingContainer.innerHTML = "";
 
@@ -55,6 +51,10 @@ export async function fetchSingleListing() {
         const imageAlt = listing.media?.[0]?.alt || "Listing image";
 
         const description = listing.description || "No description available.";
+        const bidCount = listing._count?.bids || 0;
+        const highestBid = bidCount > 0
+            ? Math.max(...listing.bids.map(bid => bid.amount))
+            : 0;
 
         card.innerHTML = `
             <img class="card-image" src="${imageUrl}" alt="${imageAlt}" onerror="this.onerror=null;this.src='${imagePlaceholder}'"/>
@@ -68,17 +68,21 @@ export async function fetchSingleListing() {
         const historyBtn = document.createElement("button");
         historyBtn.textContent = "Show Bidding History";
         historyBtn.className = "btn btn-secondary-custom";
+
         let historyVisible = false;
         let historyContainer;
 
         historyBtn.addEventListener("click", async () => {
             historyVisible = !historyVisible;
+
             if (historyVisible) {
                 historyBtn.textContent = "Hide Bidding History";
+
                 if (!historyContainer) {
                     historyContainer = document.createElement("div");
                     historyContainer.classList.add("mt-3");
                     card.appendChild(historyContainer);
+
                     await biddingHistory(listing.id, historyContainer);
                 } else {
                     historyContainer.style.display = "block";
@@ -94,18 +98,15 @@ export async function fetchSingleListing() {
         listingContainer.appendChild(col);
 
         if (bidForm) {
-            bidForm.replaceWith(bidForm.cloneNode(true));
-            const newBidForm = document.getElementById("bidForm");
-
             if (!token) {
-                newBidForm.style.display = "none";
+                bidForm.style.display = "none";
                 bidMessage.textContent = "You must be logged in to place a bid.";
             } else if (isOwner) {
-                newBidForm.style.display = "none";
+                bidForm.style.display = "none";
                 bidMessage.textContent = "You cannot bid on your own listing.";
             } else {
-                newBidForm.style.display = "block";
-                newBidForm.addEventListener("submit", async (e) => {
+                bidForm.style.display = "block";
+                bidForm.addEventListener("submit", async (e) => {
                     e.preventDefault();
                     bidMessage.textContent = "";
 
@@ -133,7 +134,7 @@ export async function fetchSingleListing() {
                         }
 
                         bidMessage.textContent = "Bid placed successfully!";
-                        newBidForm.reset();
+                        bidForm.reset();
                         fetchSingleListing();
                     } catch (err) {
                         bidMessage.textContent = `Error: ${err.message}`;
