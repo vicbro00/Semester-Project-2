@@ -18,7 +18,6 @@ createButton();
 const path = window.location.pathname;
 
 if (path.includes("index.html")) {
-    fetchListings(1);
     setupSearch();
     
     if (prevBtn && nextBtn) {
@@ -26,7 +25,7 @@ if (path.includes("index.html")) {
             if (currentPage > 1) fetchListings(currentPage - 1, currentSearchTerm);
         });
         nextBtn.addEventListener("click", () => {
-            if (currentPage < lastPage) fetchListings(currentPage + 1, currentSearchTerm);
+            if (currentPage < lastPage) (currentPage + 1, currentSearchTerm);
         });
     }
 

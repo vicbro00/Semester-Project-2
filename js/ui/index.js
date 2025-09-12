@@ -59,8 +59,6 @@ function setupSearch() {
     });
 }
 
-window.searchListings = searchListings;
-
 /**
  * filterDropdown sets up the filter dropdown functionality
  * @param {*} sortListings 
