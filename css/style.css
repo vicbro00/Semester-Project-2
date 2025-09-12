@@ -152,12 +152,22 @@ button[data-bs-toggle="offcanvas"] {
 }
 
 /* Forms */
-.form-box {
+#updateProfileForm {
     background-color: #FFD7F3;
-    border-radius: 2rem;
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
     padding: 2rem;
-    max-width: 20rem;
-    margin: 2rem auto;
+}
+
+#updateProfileForm h2 {
+    color: #333;
+}
+
+#bio {
+    resize: none;
 }
 
 /* Register page */
@@ -189,5 +199,9 @@ fieldset {
 
     main {
     margin: 0 4rem;
+    }
+
+    #updateProfileForm {
+    padding: 6rem;
     }
 }

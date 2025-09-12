@@ -5,7 +5,7 @@ import { filterDropdown } from "./js/ui/index.js";
 import { registerUser } from "./js/ui/register.js";
 import { loginUser } from "./js/ui/login.js";
 import { fetchProfile, createButton, editProfileButton, showListings, showBiddedListings } from "./js/ui/profile.js";
-import { updateProfile } from "./js/ui/update-profile.js";
+import { updateProfile, populateProfileForm } from "./js/ui/update-profile.js";
 import { createListing } from "./js/ui/create-listing.js";
 import { fetchSingleListing } from "./js/ui/bidding.js";
 import { editListing } from "./js/ui/edit-listing.js";
@@ -35,6 +35,7 @@ if (path.includes("login.html")) {
 }
 if (path.includes("update-profile.html")) {
     updateProfile();
+    populateProfileForm();
 }
 if (path.endsWith("profile.html")) {
     fetchProfile();

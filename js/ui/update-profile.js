@@ -1,11 +1,47 @@
 import { API_KEY } from "../api/api.js";
-import { showLoader } from "./loader.js";
+import { showLoader, hideLoader } from "./loader.js";
 
 const username = localStorage.getItem("username");
 const updateProfileURL = `https://v2.api.noroff.dev/auction/profiles/${username}`;
 const form = document.querySelector("#updateProfileForm");
 
-export function updateProfile() {
+export async function populateProfileForm() {
+    if (!form) return;
+
+    const token = localStorage.getItem("token");
+    if (!token || !username) return;
+
+    showLoader();
+    try {
+        const response = await fetch(`https://v2.api.noroff.dev/auction/profiles/${username}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+                "X-Noroff-API-Key": API_KEY,
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch profile data.");
+
+        const data = await response.json();
+        const profile = data.data;
+
+        document.querySelector("#bio").value = profile.bio || "";
+        document.querySelector("#avatarUrl").value = profile.avatar?.url || "";
+        document.querySelector("#avatarAlt").value = profile.avatar?.alt || "";
+        document.querySelector("#bannerUrl").value = profile.banner?.url || "";
+        document.querySelector("#bannerAlt").value = profile.banner?.alt || "";
+
+    } catch (error) {
+        console.error("Error fetching profile data:", error);
+        alert("Could not load profile data: " + error.message);
+    } finally {
+        hideLoader();
+    }
+}
+
+export async function updateProfile() {
     if (!form) return;
 
     form.addEventListener("submit", async (event) => {
