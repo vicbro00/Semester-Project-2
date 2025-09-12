@@ -18,7 +18,13 @@ createButton();
 const path = window.location.pathname;
 
 if (path.includes("index.html")) {
-    searchListings();
+    const searchInput = document.getElementById("searchInput");
+    if (searchInput) {
+        searchInput.addEventListener("input", () => {
+            searchListings();
+        });
+    }
+
     fetchListingsOnce();
     filterDropdown(sortListings);
     sortListings();
