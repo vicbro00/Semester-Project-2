@@ -61,7 +61,7 @@ export function registerUser() {
             console.log("User registered!", data);
             alert("Registration successful!");
 
-            window.location.href = "login.html";
+            window.location.href = "/Semester-Project-2/profile/login.html";
         } catch (error) {
             console.error("Error registering user:", error);
             alert("Registration failed: " + error.message);

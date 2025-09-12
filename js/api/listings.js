@@ -62,7 +62,7 @@ export async function displayListings(listings) {
 
         card.dataset.created = listing.created;
 
-        const imagePlaceholder = "./images/imagePlaceholder.png";
+        const imagePlaceholder = "../images/imagePlaceholder.png";
 
         const imageUrl = isValidUrl(listing.media?.[0]?.url) ? listing.media[0].url : imagePlaceholder;
         const imageAlt = listing.media?.[0]?.alt || "Listing image";
@@ -71,7 +71,7 @@ export async function displayListings(listings) {
             <img class="card-image" src="${imageUrl}" alt="${imageAlt}" onerror="this.onerror=null;this.src='${imagePlaceholder}'"/>
             <h2 class="card-title">${listing.title}</h2>
             <p class="card-text">Ends at: ${new Date(listing.endsAt).toLocaleDateString()}</p>
-            <button id="makeBidBtn" class="btn-primary-custom" onclick="location.href='/listings/single-listing.html?id=${listing.id}'">More info</button>
+            <button id="makeBidBtn" class="btn-primary-custom" onclick="location.href='/Semester-Project-2/listings/single-listing.html?id=${listing.id}'">More info</button>
         `;
         col.appendChild(card);
         container.appendChild(col);
@@ -141,7 +141,7 @@ export async function getListing() {
             <p class="card-text">Highest bid: $${highestBid}</p>
             <p class="card-text">Ends at: ${new Date(listing.endsAt).toLocaleDateString()}</p>
             <p class="card-text">${description}</p>
-            <button class="btn btn-primary-custom mb-2" onclick="location.href='/listings/bidding.html?id=${listing.id}'">Place Bid</button>
+            <button class="btn btn-primary-custom mb-2" onclick="location.href='/Semester-Project-2/listings/bidding.html?id=${listing.id}'">Place Bid</button>
         `;
 
         col.appendChild(card);

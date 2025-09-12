@@ -62,7 +62,7 @@ export function loginUser() {
 
             updateMenus();
             alert("Login successful!");
-            window.location.href = "/index.html";
+            window.location.href = "/Semester-Project-2/index.html";
         } catch (error) {
             console.error("Error logging in:", error);
             alert("Login failed: " + error.message);

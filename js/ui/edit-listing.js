@@ -79,7 +79,7 @@ export async function editListing() {
             }
 
             alert("Listing updated successfully!");
-            window.location.href = `/profile/profile.html`;
+            window.location.href = `/Semester-Project-2/profile/profile.html`;
         } catch (error) {
             alert(`Error updating listing: ${error.message}`);
         } finally {

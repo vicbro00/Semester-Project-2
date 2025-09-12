@@ -82,7 +82,7 @@ export function editProfileButton() {
     button.className = "btn btn-primary-custom btn-lg";
 
     button.addEventListener("click", () => {
-        window.location.href = "/profile/update-profile.html";
+        window.location.href = "/Semester-Project-2/profile/profile.html";
     });
 
     container.appendChild(button);
@@ -164,7 +164,7 @@ export async function showListings() {
                 container.querySelectorAll(".edit-listing").forEach(button => {
                     button.addEventListener("click", (e) => {
                         const listingId = e.target.dataset.id;
-                        window.location.href = `/listings/edit-listing.html?id=${listingId}`;
+                        window.location.href = `/Semester-Project-2/listings/edit-listing.html?id=${listingId}`;
                     });
                 });
 
@@ -272,7 +272,7 @@ export async function showBiddedListings() {
                                 <p class="card-text">${bid.listing.description || "No description"}</p>
                                 <p><strong>Your Bid:</strong> $${bid.amount}</p>
                                 <p><strong>Ends At:</strong> ${new Date(bid.listing.endsAt).toLocaleDateString()}</p>
-                                <a href="/listings/single-listing.html?id=${bid.listing.id}" class="btn btn-sm btn-primary-custom">View Listing</a>
+                                <a href="/Semester-Project-2/listings/single-listing.html?id=${bid.listing.id}" class="btn btn-sm btn-primary-custom">View Listing</a>
                             </div>
                         </div>
                     </div>
@@ -299,7 +299,7 @@ export function createButton() {
     button.className = "btn mt-4 btn-primary-custom btn-lg";
 
     button.addEventListener("click", () => {
-        window.location.href = "/profile/create.html";
+        window.location.href = "/Semester-Project-2/profile/create.html";
     });
 
     container.appendChild(button);
