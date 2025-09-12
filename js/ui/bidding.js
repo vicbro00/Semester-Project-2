@@ -100,7 +100,6 @@ export async function fetchSingleListing() {
         if (bidForm) {
             if (!token) {
                 bidForm.style.display = "none";
-                bidMessage.textContent = "You must be logged in to place a bid.";
             } else if (isOwner) {
                 bidForm.style.display = "none";
                 bidMessage.textContent = "You cannot bid on your own listing.";

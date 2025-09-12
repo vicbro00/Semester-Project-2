@@ -103,6 +103,8 @@ export async function getListing() {
         return;
     }
 
+    const token = localStorage.getItem("token"); // check if user is logged in
+
     showLoader();
     try {
         const response = await fetch(`${API_BASE_URL}/${listingId}?_bids=true`);
@@ -134,6 +136,10 @@ export async function getListing() {
             ? Math.max(...listing.bids.map(bid => bid.amount))
             : 0;
 
+        const placeBidButton = token
+            ? `<button class="btn btn-primary-custom mb-2" onclick="location.href='/Semester-Project-2/listings/bidding.html?id=${listing.id}'">Place Bid</button>`
+            : "";
+
         card.innerHTML = `
             <img class="card-image" src="${imageUrl}" alt="${imageAlt}" onerror="this.onerror=null;this.src='${imagePlaceholder}'"/>
             <h2 class="card-title">${listing.title}</h2>
@@ -141,7 +147,7 @@ export async function getListing() {
             <p class="card-text">Highest bid: $${highestBid}</p>
             <p class="card-text">Ends at: ${new Date(listing.endsAt).toLocaleDateString()}</p>
             <p class="card-text">${description}</p>
-            <button class="btn btn-primary-custom mb-2" onclick="location.href='/Semester-Project-2/listings/bidding.html?id=${listing.id}'">Place Bid</button>
+            ${placeBidButton}
         `;
 
         col.appendChild(card);
