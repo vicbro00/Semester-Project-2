@@ -9,6 +9,7 @@ const listingsPerPage = 100;
 const pageIndicator = document.getElementById("pageIndicator");
 const prevBtn = document.getElementById("prevPage");
 const nextBtn = document.getElementById("nextPage");
+const searchInput = document.getElementById("searchInput");
 
 /**
  * Searches listings based on user input in the search field
@@ -27,7 +28,6 @@ async function fetchListings(page = 1, searchTerm = "") {
         if (!response.ok) throw new Error("Failed to fetch listings");
 
         const data = await response.json();
-
         const listings = data.data || [];
         currentPage = data.meta?.currentPage || page;
         lastPage = data.meta?.pageCount || 1;
@@ -38,7 +38,7 @@ async function fetchListings(page = 1, searchTerm = "") {
         prevBtn.disabled = currentPage === 1;
         nextBtn.disabled = currentPage === lastPage;
     } catch (error) {
-        console.error("Error fetching listings:", error);
+        console.error(error);
         displayListings([]);
         pageIndicator.textContent = "Page 0 of 0";
         prevBtn.disabled = true;
@@ -51,10 +51,12 @@ async function fetchListings(page = 1, searchTerm = "") {
 /**
  * Handles search input
  */
-export async function searchListings() {
-    const searchInput = document.getElementById("searchInput").value.toLowerCase().trim();
-    currentSearchTerm = searchInput;
-    await fetchListings(1, currentSearchTerm);
+function setupSearch() {
+    if (!searchInput) return;
+    searchInput.addEventListener("input", () => {
+        currentSearchTerm = searchInput.value.trim();
+        fetchListings(1, currentSearchTerm);
+    });
 }
 
 window.searchListings = searchListings;
@@ -108,3 +110,4 @@ if (prevBtn && nextBtn) {
 }
 
 fetchListings(1);
+setupSearch();
