@@ -135,7 +135,9 @@ export async function getListing() {
         card.classList.add("card", "h-100", "d-flex", "flex-column", "align-items-center", "text-center");
         card.dataset.created = listing.created;
 
-        const imagePlaceholder = "/Semester-Project-2/images/imagePlaceholder.png";
+        const imagePlaceholder = window.location.pathname.includes("index.html") || window.location.pathname === "/Semester-Project-2/"
+            ? "/Semester-Project-2/images/imagePlaceholder.png"
+            : "../images/imagePlaceholder.png";
 
         const description = listing.description || "No description available.";
         const bidCount = listing._count?.bids || 0;

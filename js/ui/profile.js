@@ -137,6 +137,8 @@ export async function showListings() {
                     return;
                 }
 
+                const imagePlaceholder = "/Semester-Project-2/images/imagePlaceholder.png";
+
                 container.innerHTML = listings.map(listing => {
 
                     return `
