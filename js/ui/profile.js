@@ -138,19 +138,22 @@ export async function showListings() {
                 }
 
                 container.innerHTML = listings.map(listing => {
-                    const imageUrl = listing.media?.[0]?.url || "/Semester-Project-2/images/imagePlaceholder.png";
-                    const imageAlt = listing.media?.[0]?.alt || "Listing image";
 
                     return `
                         <div class="col-12 col-md-6">
                             <div class="card h-100 mb-3">
-                                <img src="${imageUrl}" alt="${imageAlt}" class="card-img-top">
+                                <div class="card-carousel">
+                                    <button class="carousel-btn left-btn">&lt;</button>
+                                    <img class="carousel-image" src="${listing.media?.[0]?.url || imagePlaceholder}" 
+                                        alt="${listing.media?.[0]?.alt || 'Listing image'}" onerror="this.onerror=null;this.src='${imagePlaceholder}'"/>
+                                    <button class="carousel-btn right-btn">&gt;</button>
+                                </div>
                                 <div class="card-body">
                                     <h5 class="card-title">${listing.title}</h5>
                                     <p class="card-text">${listing.description || "No description"}</p>
                                     <p><strong>Tags:</strong> ${listing.tags.join(", ")}</p>
                                     <p><strong>Ends At:</strong> ${new Date(listing.endsAt).toLocaleDateString()}</p>
-                                    <div class="d-flex gap-2">
+                                    <div class="d-flex justify-content-center gap-2">
                                         <button class="btn btn-sm btn-warning edit-listing" data-id="${listing.id}">Edit</button>
                                         <button class="btn btn-sm btn-danger delete-listing" data-id="${listing.id}">Delete</button>
                                     </div>
@@ -159,6 +162,33 @@ export async function showListings() {
                         </div>
                     `;
                 }).join("");
+
+                container.querySelectorAll(".card-carousel").forEach((carousel, index) => {
+                    const listing = listings[index];
+                    const images = listing.media?.length 
+                        ? listing.media 
+                        : [{ url: "/Semester-Project-2/images/imagePlaceholder.png", alt: "Listing image" }];
+                    let currentIndex = 0;
+
+                    const imgElement = carousel.querySelector(".carousel-image");
+                    const leftBtn = carousel.querySelector(".left-btn");
+                    const rightBtn = carousel.querySelector(".right-btn");
+
+                    function updateImage() {
+                        imgElement.src = images[currentIndex].url || "/Semester-Project-2/images/imagePlaceholder.png";
+                        imgElement.alt = images[currentIndex].alt || "Listing image";
+                    }
+
+                    leftBtn.addEventListener("click", () => {
+                        currentIndex = (currentIndex - 1 + images.length) % images.length;
+                        updateImage();
+                    });
+
+                    rightBtn.addEventListener("click", () => {
+                        currentIndex = (currentIndex + 1) % images.length;
+                        updateImage();
+                    });
+                });
 
                 // Attach events for edit and delete buttons
                 container.querySelectorAll(".edit-listing").forEach(button => {
