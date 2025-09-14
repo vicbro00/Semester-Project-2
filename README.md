@@ -1,5 +1,7 @@
 # Semester-Project-2
 
+![alt text](image-1.png)
+
 This project is a responsive auction site where users can create a profile, bid on different listings, create their own listings and customize their profile.
 
 ## Features
