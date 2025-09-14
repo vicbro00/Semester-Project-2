@@ -1,0 +1,23 @@
+Links to Semester Project 2 Delivery
+
+Link to Kanban Board:
+	https://github.com/users/vicbro00/projects/13
+
+Link to Gannt chart:
+	https://github.com/users/vicbro00/projects/13/views/4
+
+Link to Figma Style Guide:
+	https://www.figma.com/design/OFjFmqXhrndHmIvM6c12ca/Semester-Project-2?node-id=2-19&p=f
+
+Link to Figma design:
+	https://www.figma.com/design/OFjFmqXhrndHmIvM6c12ca/Semester-Project-2?node-id=0-1&p=f
+	https://www.figma.com/design/OFjFmqXhrndHmIvM6c12ca/Semester-Project-2?node-id=1-3&p=f
+
+Link to Github Repository:
+	https://github.com/vicbro00/Semester-Project-2
+
+Link to deployed web application:
+	https://vicbro00.github.io/Semester-Project-2/index.html
+
+Link to reflection document (PDF):
+	file:///C:/Projects-copy/Semester-Project-2/Reflection%20Semester%20Project%202.pdf

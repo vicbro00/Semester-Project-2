@@ -58,7 +58,7 @@ npm start
 
 ## All deliverables:
 
-Links to Semester Project 2 Delivery
+Links to Semester Project 2 Delivery:
 
 Link to Kanban Board:
 	https://github.com/users/vicbro00/projects/13
