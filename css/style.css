@@ -198,6 +198,15 @@ button[data-bs-toggle="offcanvas"] {
     padding: 2rem;
 }
 
+#updateProfileForm {
+    display: flex;
+    justify-content: center;
+}
+
+#updateProfileForm button {
+    width: auto;
+}
+
 #bio,
 #description {
     resize: none;

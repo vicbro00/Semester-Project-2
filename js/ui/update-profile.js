@@ -33,9 +33,7 @@ export async function populateProfileForm() {
 
         document.querySelector("#bio").value = profile.bio || "";
         document.querySelector("#avatarUrl").value = profile.avatar?.url || "";
-        document.querySelector("#avatarAlt").value = profile.avatar?.alt || "";
         document.querySelector("#bannerUrl").value = profile.banner?.url || "";
-        document.querySelector("#bannerAlt").value = profile.banner?.alt || "";
 
     } catch (error) {
         console.error("Error fetching profile data:", error);
@@ -64,14 +62,12 @@ export async function updateProfile() {
 
         const bio = document.querySelector("#bio").value.trim();
         const avatarUrl = document.querySelector("#avatarUrl").value.trim();
-        const avatarAlt = document.querySelector("#avatarAlt").value.trim();
         const bannerUrl = document.querySelector("#bannerUrl").value.trim();
-        const bannerAlt = document.querySelector("#bannerAlt").value.trim();
 
         const body = {};
         if (bio) body.bio = bio;
-        if (avatarUrl) body.avatar = { url: avatarUrl, alt: avatarAlt || "" };
-        if (bannerUrl) body.banner = { url: bannerUrl, alt: bannerAlt || "" };
+        if (avatarUrl) body.avatar = { url: avatarUrl, alt: "" };
+        if (bannerUrl) body.banner = { url: bannerUrl, alt: "" };
 
         if (Object.keys(body).length === 0) {
             alert("You must provide at least one field to update.");
