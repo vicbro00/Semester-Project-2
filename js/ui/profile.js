@@ -192,7 +192,6 @@ export async function showListings() {
                     });
                 });
 
-                // Attach events for edit and delete buttons
                 container.querySelectorAll(".edit-listing").forEach(button => {
                     button.addEventListener("click", (e) => {
                         const listingId = e.target.dataset.id;

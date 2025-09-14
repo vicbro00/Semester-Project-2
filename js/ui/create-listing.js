@@ -39,7 +39,7 @@ export function createListing() {
         const media = [];
         for (const url of urls) {
             try {
-                new URL(url); // throws if invalid
+                new URL(url);
                 media.push({ url, alt: title });
             } catch {
                 message.innerHTML = `<p class="text-danger">Invalid image URL: ${url}</p>`;

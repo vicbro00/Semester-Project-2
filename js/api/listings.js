@@ -75,7 +75,6 @@ export async function displayListings(listings) {
         col.appendChild(card);
         container.appendChild(col);
 
-        // Initialize carousel for this card
         const carousel = card.querySelector(".card-carousel");
         const imgElement = carousel.querySelector(".carousel-image");
         const leftBtn = carousel.querySelector(".left-btn");
