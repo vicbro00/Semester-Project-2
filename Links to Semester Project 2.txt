@@ -20,4 +20,4 @@ Link to deployed web application:
 	https://vicbro00.github.io/Semester-Project-2/index.html
 
 Link to reflection document (PDF):
-	file:///C:/Projects-copy/Semester-Project-2/Reflection%20Semester%20Project%202.pdf
+	https://github.com/vicbro00/Semester-Project-2/blob/main/Reflection%20Semester%20Project%202.pdf
